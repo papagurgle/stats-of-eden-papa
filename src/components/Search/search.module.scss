@@ -1,0 +1,10 @@
+.searchBtn {
+  font-size: 0;
+  padding: 0.5rem;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+}

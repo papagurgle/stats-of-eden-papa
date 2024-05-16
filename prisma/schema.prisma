@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Player {
+  playFabId        String           @id
+  displayName      String // Sometimes the API returns nothing
+  experience       Int // Profile experience
+  rank             Int?
+  rating           Int?
+  rankedWins       Int
+  rankedLosses     Int
+  rankedPeakRating Int?
+  season           String
+  unrankedWins     Int
+  unrankedLosses   Int
+  unrankedRating   Int?
+  continentCode    String
+  countryCode      String
+  city             String
+  latitude         Float
+  longitude        Float
+  dreadwyrmExp     Int?
+  selicyExp        Int?
+  saffronExp       Int?
+  chirettaExp      Int?
+  maypulExp        Int?
+  gunnerExp        Int?
+  harissaExp       Int?
+  revaExp          Int?
+  violetteExp      Int?
+  neeraExp         Int?
+  terraExp         Int?
+  queenExp         Int?
+  shopkeeperExp    Int?
+  hazelExp         Int?
+  shisoExp         Int?
+  snapshots        PlayerSnapshot[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index(playFabId)
+}
+
+model PlayerSnapshot {
+  id               String   @id @default(uuid())
+  player           Player   @relation(fields: [playerPlayFabId], references: [playFabId])
+  playerPlayFabId  String
+  playFabId        String
+  displayName      String
+  experience       Int
+  rank             Int?
+  rating           Int?
+  rankedWins       Int
+  rankedLosses     Int
+  rankedPeakRating Int?
+  season           String
+  unrankedWins     Int
+  unrankedLosses   Int
+  unrankedRating   Int?
+  continentCode    String
+  countryCode      String
+  city             String
+  latitude         Float
+  longitude        Float
+  dreadwyrmExp     Int?
+  selicyExp        Int?
+  saffronExp       Int?
+  chirettaExp      Int?
+  maypulExp        Int?
+  gunnerExp        Int?
+  harissaExp       Int?
+  revaExp          Int?
+  violetteExp      Int?
+  neeraExp         Int?
+  terraExp         Int?
+  queenExp         Int?
+  shopkeeperExp    Int?
+  hazelExp         Int?
+  shisoExp         Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([playerPlayFabId, createdAt])
+  @@index(playFabId)
+}

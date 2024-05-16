@@ -1,0 +1,44 @@
+@use '../../sass/mantine' as *;
+
+.table {
+  @include smaller-than($mantine-breakpoint-sm) {
+    .desktopOnly {
+      display: none;
+    }
+  }
+}
+
+.player {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.character {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: var(--mantine-spacing-xs);
+}
+
+.name {
+  display: inline;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  padding-right: 5px;
+}
+
+.tier {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wins {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+}
+
+.progressLabel {
+  font-size: rem(9px);
+}

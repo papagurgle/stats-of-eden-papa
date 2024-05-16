@@ -1,0 +1,34 @@
+@use '../../sass/mantine' as *;
+
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  text-decoration: none;
+  color: light-dark(var(--mantine-primary-color-9), var(--mantine-primary-color-4));
+
+  &:hover,
+  &:focus {
+    color: light-dark(var(--mantine-primary-color-7), var(--mantine-primary-color-5));
+  }
+}
+
+.logoNote {
+  margin-bottom: -2px;
+  font-size: rem(10px);
+}
+
+.link {
+  color: light-dark(var(--mantine-primary-color-9), var(--mantine-primary-color-3));
+
+  &:hover,
+  &:focus {
+    color: light-dark(var(--mantine-primary-color-7), var(--mantine-primary-color-5));
+  }
+}

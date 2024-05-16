@@ -1,0 +1,65 @@
+@use '../../sass/mantine' as *;
+
+.banner {
+  position: relative;
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-white);
+  overflow: hidden;
+
+  @include larger-than($mantine-breakpoint-sm) {
+    min-height: 300px;
+  }
+}
+
+.splash {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.splashImg {
+  position: absolute;
+  top: 5%;
+}
+
+.stats {
+  width: 100%;
+  position: relative;
+  padding: var(--mantine-spacing-sm);
+
+  @include larger-than($mantine-breakpoint-sm) {
+    left: 0;
+    bottom: 0;
+  }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: rem(7);
+}
+
+.name {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flag {
+  flex: 0 0 auto;
+}
+
+.card {
+  max-width: 100%;
+  height: 100%;
+}
+
+.winrate {
+  width: rem(200);
+}
+
+.overlay {
+  @include smaller-than($mantine-breakpoint-sm) {
+    background: rgba(0, 0, 0, 0.9);
+  }
+}

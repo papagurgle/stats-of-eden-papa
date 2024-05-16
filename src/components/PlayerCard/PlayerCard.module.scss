@@ -1,0 +1,117 @@
+@use '../../sass/mantine' as *;
+
+.card {
+  position: relative;
+  border-radius: var(--mantine-radius-default);
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
+  padding: var(--mantine-spacing-xs);
+  overflow: hidden;
+  height: 100%;
+
+  &.top {
+    &.desktopOnly {
+      display: none;
+    }
+
+    @include larger-than($mantine-breakpoint-sm) {
+      &.mobileOnly {
+        display: none;
+      }
+
+      &.desktopOnly {
+        display: block;
+      }
+    }
+  }
+}
+
+.inner {
+  position: relative;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+
+  > * {
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    // Add a gradient from left to right starting at 10% using the background color from .card:
+    background: linear-gradient(
+      to right,
+      light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6)) 65%,
+      transparent
+    );
+  }
+}
+
+.cardTop {
+  flex: 1;
+}
+
+.icon {
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+}
+
+.rank {
+  background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  border-radius: var(--mantine-radius-default);
+  padding: var(--mantine-spacing-xs);
+
+  &.first {
+    background: color-mix(in srgb, currentColor 20%, transparent);
+    color: light-dark(var(--mantine-primary-color-6), var(--mantine-primary-color-3));
+  }
+
+  &.second {
+    background: color-mix(in srgb, currentColor 20%, transparent);
+    color: light-dark(var(--mantine-color-orange-8), var(--mantine-color-yellow-3));
+  }
+
+  &.third {
+    background: color-mix(in srgb, currentColor 20%, transparent);
+    color: light-dark(var(--mantine-color-red-9), var(--mantine-color-red-3));
+  }
+}
+
+.nameLink {
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+
+    .name {
+      text-decoration: underline;
+    }
+  }
+}
+
+.name {
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  padding-right: 7px;
+}
+
+.tierInfo {
+  background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-default);
+  padding: 0.3rem var(--mantine-spacing-xs);
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
+
+.wins {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-gray-2));
+}
