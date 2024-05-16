@@ -15,6 +15,7 @@ export default function Search() {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: debounced !== undefined && debounced.length > 0,
     }
   );
   const router = useRouter();
@@ -60,7 +61,8 @@ export default function Search() {
       }}
       rightSection={
         <>
-          {(headerSearchQuery.isLoading || headerSearchQuery.isPending) && <Loader size={16} />}
+          {headerSearchQuery.fetchStatus === 'fetching' &&
+            (headerSearchQuery.isLoading || headerSearchQuery.isPending) && <Loader size={16} />}
           <UnstyledButton
             aria-label="Search player"
             className={styles.searchBtn}
