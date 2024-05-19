@@ -1,13 +1,14 @@
-import { Title } from '@mantine/core';
-import { type Player } from '@prisma/client';
+import { Space } from '@mantine/core';
 import { type GetServerSideProps, type InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Alert from '~/components/Alert/Alert';
 import CharacterChart from '~/components/CharacterChart/CharacterChart';
 import LastUpdated from '~/components/LastUpdated/LastUpdated';
-import Banner from '~/components/Profile/Banner';
+import ProfileBanner from '~/components/ProfileBanner/ProfileBanner';
+import RankChart from '~/components/RankChart/RankChart';
 import { db } from '~/server/db';
+import { type SSRPlayer } from '~/types/Player';
 
 export default function PlayerPage({
   player,
@@ -30,10 +31,9 @@ export default function PlayerPage({
         />
       </Head>
       <LastUpdated time={player.updatedAt} />
-      <Banner player={player} rankInExperience={rankInExperience} />
-      <Title order={2} mb="lg">
-        Character stats
-      </Title>
+      <ProfileBanner player={player} rankInExperience={rankInExperience} />
+      <RankChart player={player} />
+      <Space h="xl" />
       <CharacterChart player={player} />
     </>
   );
@@ -44,6 +44,20 @@ export const getServerSideProps = (async (context) => {
   const player = await db.player.findUnique({
     where: {
       playFabId: id,
+    },
+    include: {
+      snapshots: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          rating: true,
+          rank: true,
+          createdAt: true,
+        },
+        take: 50,
+        skip: 1,
+      },
     },
   });
   let rankInExperience: number | undefined;
@@ -62,6 +76,6 @@ export const getServerSideProps = (async (context) => {
 
   return { props: { player, rankInExperience } };
 }) satisfies GetServerSideProps<{
-  player: Player | null;
+  player: SSRPlayer | null;
   rankInExperience: number | undefined;
 }>;

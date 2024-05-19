@@ -1,4 +1,4 @@
-@use '../../sass/mantine' as *;
+@use '~/sass/mantine' as *;
 
 .banner {
   position: relative;
@@ -31,6 +31,13 @@
     left: 0;
     bottom: 0;
   }
+}
+
+.rank {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: rem(7);
 }
 
 .title {

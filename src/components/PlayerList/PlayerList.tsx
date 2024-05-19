@@ -1,94 +1,132 @@
-import { Anchor, Group, Image, Table, Text } from '@mantine/core';
-import { type Player } from '@prisma/client';
-import NextImage from 'next/image';
-import Link from 'next/link';
-import Flag from '~/components/Flag/Flag';
-import Winrate from '~/components/Winrate/Winrate';
-import { getTopCharacter } from '~/game/characters';
-import { getTier } from '~/game/tiers';
+import { Table } from '@mantine/core';
+import { useState } from 'react';
+import PlayerListRows from '~/components/PlayerList/PlayerListRows';
+import { type SSRPlayer } from '~/types/Player';
+import PlayerListTh from './PlayerListTh';
 import styles from './player-list.module.scss';
 
 export interface PlayerListProps {
-  players: Player[];
+  players: SSRPlayer[];
 }
 
-export default function PlayerList({ players }: PlayerListProps) {
-  const rows = players.map((player) => {
-    const topCharacter = getTopCharacter(player);
-    const tier = getTier(player.rating ?? 0);
+type PlayerListSortBy = keyof SSRPlayer | 'winrate' | 'tier';
 
-    return (
-      <Table.Tr key={player.playFabId}>
-        <Table.Td>{player.rank}</Table.Td>
-        <Table.Td>
-          <div className={styles.player}>
-            <Image
-              component={NextImage}
-              w={25}
-              h={25}
-              radius="xs"
-              src={topCharacter.icon}
-              alt={topCharacter.name}
-              className={styles.character}
-            />
-            <Anchor
-              fw="bold"
-              size="sm"
-              href={`/player/${player.playFabId}`}
-              component={Link}
-              className={styles.name}
-            >
-              {player.displayName}
-            </Anchor>
-            <Flag city={player.city} country={player.countryCode} size={15} />
-          </div>
-        </Table.Td>
-        <Table.Td className={styles.desktopOnly}>
-          <div className={styles.tier}>
-            <Image
-              component={NextImage}
-              w={15}
-              h={15}
-              radius="xs"
-              src={tier.image}
-              alt={tier.name}
-            />
-            {tier.name}
-          </div>
-        </Table.Td>
-        <Table.Td>{player.rating}</Table.Td>
-        <Table.Td className={styles.desktopOnly}>{player.experience.toLocaleString()}</Table.Td>
-        <Table.Td>
-          <Group gap="xs" className={styles.wins}>
-            <Winrate
-              wins={player.rankedWins}
-              losses={player.rankedLosses}
-              className={styles.desktopOnly}
-            />
-            <Text size="xs">
-              {Math.round((player.rankedWins / (player.rankedWins + player.rankedLosses)) * 100)}%
-            </Text>
-          </Group>
-        </Table.Td>
-      </Table.Tr>
-    );
-  });
+export default function PlayerList({ players }: PlayerListProps) {
+  const [sortBy, setSortBy] = useState<PlayerListSortBy | null>(null);
+  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [sortedData, setSortedData] = useState<SSRPlayer[]>(players);
+
+  function setSorting(field: PlayerListSortBy) {
+    const reversed = field === sortBy ? !reverseSortDirection : false;
+    setReverseSortDirection(reversed);
+    setSortBy(field);
+    setSortedData(sortData(players, { sortBy: field, reversed }));
+  }
 
   return (
-    <Table className={styles.table} striped highlightOnHover>
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th>
-            <span className={styles.desktopOnly}>Rank</span>
-          </Table.Th>
-          <Table.Th>Player</Table.Th>
-          <Table.Th className={styles.desktopOnly}>Tier</Table.Th>
-          <Table.Th>Rating</Table.Th>
-          <Table.Th className={styles.desktopOnly}>Experience</Table.Th>
-          <Table.Th>Win Rate</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>{rows}</Table.Tbody>
-    </Table>
+    <Table.ScrollContainer minWidth={500}>
+      <Table className={styles.table} striped highlightOnHover>
+        <Table.Thead>
+          <Table.Tr>
+            <PlayerListTh
+              sorted={sortBy === 'rank'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('rank')}
+            >
+              <span className={styles.desktopOnly}>Rank</span>
+            </PlayerListTh>
+            <PlayerListTh
+              sorted={sortBy === 'displayName'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('displayName')}
+            >
+              Player
+            </PlayerListTh>
+            <PlayerListTh
+              sorted={sortBy === 'tier'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('tier')}
+              className={styles.desktopOnly}
+            >
+              Tier
+            </PlayerListTh>
+            <PlayerListTh
+              sorted={sortBy === 'rating'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('rating')}
+            >
+              Rating
+            </PlayerListTh>
+            <PlayerListTh
+              sorted={sortBy === 'experience'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('experience')}
+              className={styles.desktopOnly}
+            >
+              Experience
+            </PlayerListTh>
+            <PlayerListTh
+              sorted={sortBy === 'winrate'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('winrate')}
+            >
+              Win Rate
+            </PlayerListTh>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          <PlayerListRows players={sortedData} />
+        </Table.Tbody>
+      </Table>
+    </Table.ScrollContainer>
   );
+}
+
+function sortData(
+  data: SSRPlayer[],
+  payload: { sortBy: PlayerListSortBy; reversed: boolean }
+): SSRPlayer[] {
+  const { sortBy, reversed } = payload;
+
+  return [...data].sort((a, b) => {
+    let tempA, tempB;
+
+    if (sortBy === 'winrate') {
+      tempA = Math.round((a.rankedWins / (a.rankedWins + a.rankedLosses)) * 100);
+      tempB = Math.round((b.rankedWins / (b.rankedWins + b.rankedLosses)) * 100);
+    } else if (sortBy === 'tier') {
+      // 'tier' doesn't exist so using the 'rating' instead. Sometimes the 'rating'
+      tempA = a.rank;
+      tempB = b.rank;
+    } else {
+      tempA = a[sortBy];
+      tempB = b[sortBy];
+    }
+
+    if (reversed) {
+      if (typeof tempA === 'number' && typeof tempB === 'number') {
+        return tempA - tempB;
+      } else if (typeof tempA === 'number') {
+        return -1;
+      } else if (typeof tempB === 'number') {
+        return 1;
+      } else if (typeof tempA === 'string' && typeof tempB === 'string') {
+        return tempA.localeCompare(tempB);
+      } else {
+        return 0;
+      }
+    }
+
+    if (typeof tempA === 'number' && typeof tempB === 'number') {
+      return tempB - tempA;
+    } else if (typeof tempA === 'number') {
+      return 1;
+    } else if (typeof tempB === 'number') {
+      return -1;
+    } else if (typeof tempA === 'string' && typeof tempB === 'string') {
+      return tempB.localeCompare(tempA);
+    } else {
+      return 0;
+    }
+  });
 }

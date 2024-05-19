@@ -1,8 +1,8 @@
-import { type Player } from '@prisma/client';
 import { type GetServerSideProps, type InferGetServerSidePropsType } from 'next';
 import LastUpdated from '~/components/LastUpdated/LastUpdated';
 import Leaderboard from '~/components/Leaderboard/Leaderboard';
 import { db } from '~/server/db';
+import { type SSRPlayer } from '~/types/Player';
 
 export default function IndexPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
@@ -22,6 +22,20 @@ export const getServerSideProps = (async (context) => {
       { updatedAt: 'desc' }, // Secondary sort by update time descending
     ],
     distinct: ['rank'], // Ensure each rank is represented only once
+    include: {
+      snapshots: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          rating: true,
+          rank: true,
+          createdAt: true,
+        },
+        take: 1,
+        skip: 1,
+      },
+    },
   });
 
   const lastUpdatedPlayer = leaderboard.reduce((acc, player) =>
@@ -37,6 +51,6 @@ export const getServerSideProps = (async (context) => {
     },
   };
 }) satisfies GetServerSideProps<{
-  leaderboard: Player[];
+  leaderboard: SSRPlayer[];
   lastUpdated: Date;
 }>;

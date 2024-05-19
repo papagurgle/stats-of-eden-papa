@@ -1,19 +1,21 @@
 import { Box, Flex, Group, Overlay, Stack, Text, Title } from '@mantine/core';
-import { type Player } from '@prisma/client';
 import cx from 'classnames';
 import Image from 'next/image';
 import Flag from '~/components/Flag/Flag';
+import RankChange from '~/components/RankChange/RankChange';
 import Tier from '~/components/Tier/Tier';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
-import styles from './banner.module.scss';
+import { type SSRPlayer } from '~/types/Player';
+import { getRankChange } from '~/utils/rankChange';
+import styles from './profile-banner.module.scss';
 
-export interface BannerProps {
-  player: Player;
+export interface ProfileBannerProps {
+  player: SSRPlayer;
   rankInExperience?: number;
 }
 
-export default function Banner({ player, rankInExperience }: BannerProps) {
+export default function ProfileBanner({ player, rankInExperience }: ProfileBannerProps) {
   const character = getTopCharacter(player);
   const splashWidth = 400;
   const splashHeight = character.splash.height / (character.splash.width / splashWidth);
@@ -53,9 +55,18 @@ export default function Banner({ player, rankInExperience }: BannerProps) {
               className={styles.flag}
             />
           </Title>
-          <Title order={2} size="h4">
-            Rank: {player.rank}
-          </Title>
+          {player.rank && (
+            <Title order={2} size="h4" className={styles.rank}>
+              Rank:
+              <RankChange
+                rank={player.rank}
+                previousRank={player.snapshots[0]?.rank ?? player.rank}
+                change={getRankChange(player)}
+                reverse
+                hideNone
+              />
+            </Title>
+          )}
           <Flex align="center" gap="sm" my="xs">
             <Tier rating={player.rating ?? 0} size="large" />
           </Flex>

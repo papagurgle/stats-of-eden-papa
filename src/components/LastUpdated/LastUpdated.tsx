@@ -11,13 +11,13 @@ export interface LastUpdatedProps {
 TimeAgo.addDefaultLocale(en);
 
 export default function LastUpdated({ time }: LastUpdatedProps) {
-  const x = new Intl.DateTimeFormat('en-US', {
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'full',
     timeStyle: 'long',
   }).format(time);
 
   return (
-    <Tooltip label={x}>
+    <Tooltip label={formattedDate}>
       <Text size="xs" mb="xs" className={styles.text}>
         Last updated: <ReactTimeAgo date={time} />. Updates hourly
       </Text>

@@ -16,6 +16,7 @@ export const env = createEnv({
       ),
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     CUSTOMID: z.string(),
+    ANALYZE: z.string().optional(),
   },
 
   /**
@@ -35,6 +36,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     CUSTOMID: process.env.CUSTOMID,
+    ANALYZE: process.env.ANALYZE,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

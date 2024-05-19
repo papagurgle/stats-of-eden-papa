@@ -1,5 +1,6 @@
 import { createTheme, type MantineColorsTuple } from '@mantine/core';
 import { Montserrat } from 'next/font/google';
+import mantineStyles from '~/sass/exports.module.scss';
 
 const montserrat = Montserrat({ subsets: ['latin'], display: 'swap' });
 
@@ -20,5 +21,12 @@ export const theme = createTheme({
   fontFamily: montserrat.style.fontFamily,
   colors: {
     themeColors: THEME_COLORS,
+  },
+  breakpoints: {
+    xs: mantineStyles['breakpoint-xs'],
+    sm: mantineStyles['breakpoint-sm'],
+    md: mantineStyles['breakpoint-md'],
+    lg: mantineStyles['breakpoint-lg'],
+    xl: mantineStyles['breakpoint-xl'],
   },
 });

@@ -84,4 +84,31 @@ export const playerRouter = createTRPCRouter({
         distinct: ['rank'], // Ensure each rank is represented only once
       });
     }),
+
+  getPlayerRanks: publicProcedure
+    .input(
+      z.object({
+        playFabId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const player = await ctx.db.player.findUnique({
+        where: {
+          playFabId: input.playFabId,
+        },
+        include: {
+          snapshots: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+            select: {
+              rank: true,
+              createdAt: true,
+            },
+          },
+        },
+      });
+
+      return player?.snapshots;
+    }),
 });

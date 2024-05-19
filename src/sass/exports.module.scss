@@ -1,0 +1,9 @@
+@use './mantine' as mantine;
+
+:export {
+  breakpoint-xs: mantine.$mantine-breakpoint-xs;
+  breakpoint-sm: mantine.$mantine-breakpoint-sm;
+  breakpoint-md: mantine.$mantine-breakpoint-md;
+  breakpoint-lg: mantine.$mantine-breakpoint-lg;
+  breakpoint-xl: mantine.$mantine-breakpoint-xl;
+}

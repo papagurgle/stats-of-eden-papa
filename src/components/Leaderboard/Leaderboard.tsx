@@ -1,11 +1,11 @@
 import { Grid, Space } from '@mantine/core';
-import { type Player } from '@prisma/client';
 import PlayerCard from '~/components/PlayerCard/PlayerCard';
 import TopPlayerCard from '~/components/PlayerCard/TopPlayerCard';
 import PlayerList from '~/components/PlayerList/PlayerList';
+import { type SSRPlayer } from '~/types/Player';
 
 export interface LeaderboardProps {
-  leaderboard: Player[];
+  leaderboard: SSRPlayer[];
 }
 
 export default function Leaderboard({ leaderboard }: LeaderboardProps) {

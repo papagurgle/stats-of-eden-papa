@@ -1,0 +1,20 @@
+.rank {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.4em;
+
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+.rankChange {
+  &.up {
+    color: var(--mantine-color-green-6);
+  }
+
+  &.down {
+    color: var(--mantine-color-red-6);
+  }
+}
