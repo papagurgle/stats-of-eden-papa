@@ -34,7 +34,7 @@ export async function updateDB() {
       CreateAccount: false,
     });
 
-    const totalRecordsToFetch = 250;
+    const totalRecordsToFetch = 500;
     let startPosition = 0;
     let recordsFetched = 0;
 

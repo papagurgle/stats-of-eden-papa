@@ -64,36 +64,40 @@ export default function RankChart({ player }: RankChartProps) {
       <Title order={2} mb="lg">
         Rank history
       </Title>
-      <LineChart
-        h={300}
-        data={data}
-        dataKey="date"
-        series={[{ name: 'rank', color: 'blue.6', label: 'Rank' }]}
-        curveType="natural"
-        withXAxis={false}
-        connectNulls
-        xAxisProps={{
-          padding: {
-            right: 20,
-          },
-          reversed: true,
-        }}
-        yAxisProps={{
-          padding: {
-            bottom: 40,
-            top: 40,
-          },
-          reversed: true,
-          allowDecimals: false,
-          domain: [Math.max(...data.map((entry) => entry.rank), 1), 0],
-        }}
-        tooltipProps={{
-          // @ts-expect-error overwriting types
-          content: ({ label, payload }: ChartTooltipProps) => {
-            return <ChartTooltip label={label} payload={payload} />;
-          },
-        }}
-      />
+      {data.length > 1 ? (
+        <LineChart
+          h={300}
+          data={data}
+          dataKey="date"
+          series={[{ name: 'rank', color: 'blue.6', label: 'Rank' }]}
+          curveType="natural"
+          withXAxis={false}
+          connectNulls
+          xAxisProps={{
+            padding: {
+              right: 20,
+            },
+            reversed: true,
+          }}
+          yAxisProps={{
+            padding: {
+              bottom: 40,
+              top: 40,
+            },
+            reversed: true,
+            allowDecimals: false,
+            domain: [Math.max(...data.map((entry) => entry.rank), 1), 0],
+          }}
+          tooltipProps={{
+            // @ts-expect-error overwriting types
+            content: ({ label, payload }: ChartTooltipProps) => {
+              return <ChartTooltip label={label} payload={payload} />;
+            },
+          }}
+        />
+      ) : (
+        <Text ta="center">No rank history available</Text>
+      )}
     </>
   );
 }
