@@ -1,5 +1,4 @@
 import { Anchor, Group, Image, Table, Text } from '@mantine/core';
-import cx from 'classnames';
 import NextImage from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
@@ -8,19 +7,19 @@ import RankChange from '~/components/RankChange/RankChange';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
 import { getTier } from '~/game/tiers';
-import { type SSRPlayer } from '~/types/Player';
+import { type PlayerInfo } from '~/types/Player';
 import { getRankChange } from '~/utils/rankChange';
 import styles from './player-list.module.scss';
 
 interface PlayerListRowsProps {
-  players: SSRPlayer[];
+  players: PlayerInfo[];
 }
 
 export default function PlayerListRows({ players }: PlayerListRowsProps): React.ReactNode {
   return players.map((player) => <PlayerListRow key={player.playFabId} player={player} />);
 }
 
-function PlayerListRow({ player }: { player: SSRPlayer }) {
+function PlayerListRow({ player }: { player: PlayerInfo }) {
   const topCharacter = getTopCharacter(player);
   const tier = getTier(player.rating ?? 0);
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -81,7 +80,7 @@ function PlayerListRow({ player }: { player: SSRPlayer }) {
           <Winrate
             wins={player.rankedWins}
             losses={player.rankedLosses}
-            className={cx(styles.desktopOnly, styles.winrate)}
+            className={styles.winrate}
           />
           <Text size="xs">
             {Math.round((player.rankedWins / (player.rankedWins + player.rankedLosses)) * 100)}%

@@ -59,6 +59,16 @@ export default function AboutPage() {
               </Title>
               <Space h="xs" />
               <Text fw="bold" size="sm">
+                June 7th, 2024
+              </Text>
+              <Space h="xs" />
+              <List size="xs">
+                <List.Item>Added player sort</List.Item>
+                <List.Item>Added &quot;load more&quot; button</List.Item>
+                <List.Item>Updated &quot;last updated&quot; logic</List.Item>
+              </List>
+              <Space h="md" />
+              <Text fw="bold" size="sm">
                 May 19th, 2024
               </Text>
               <Space h="xs" />

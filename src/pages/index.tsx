@@ -1,56 +1,116 @@
+import { Box, Button, LoadingOverlay } from '@mantine/core';
+import { keepPreviousData, type DehydratedState } from '@tanstack/react-query';
 import { type GetServerSideProps, type InferGetServerSidePropsType } from 'next';
+import { useEffect, useState } from 'react';
+import Alert from '~/components/Alert/Alert';
 import LastUpdated from '~/components/LastUpdated/LastUpdated';
 import Leaderboard from '~/components/Leaderboard/Leaderboard';
-import { db } from '~/server/db';
-import { type SSRPlayer } from '~/types/Player';
+import { trpcHelper } from '~/pages/api/trpc/[trpc]';
+import { type PlayerInfo } from '~/types/Player';
+import { api } from '~/utils/api';
+import getUrl from '~/utils/getUrl';
+import { sortData, type PlayerListSortBy } from '~/utils/sortData';
 
 export default function IndexPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { limit, sort } = props;
+  const [sortBy, setSortBy] = useState<PlayerListSortBy>(sort);
+  const playersQuery = api.player.getLeaderboard.useInfiniteQuery(
+    { limit, sort: sortBy },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      placeholderData: keepPreviousData,
+    }
+  );
+  const [sortedData, setSortedData] = useState<PlayerInfo[]>(
+    sortData(playersQuery.data?.pages.flatMap((page) => page.items) ?? [], { sortBy })
+  );
+
+  useEffect(() => {
+    if (!playersQuery.isFetching && !playersQuery.isFetchingNextPage) {
+      setSortedData(
+        sortData(playersQuery.data?.pages.flatMap((page) => page.items) ?? [], { sortBy })
+      );
+    }
+  }, [
+    playersQuery.data,
+    sortBy,
+    playersQuery.isPlaceholderData,
+    playersQuery.isFetching,
+    playersQuery.isFetchingNextPage,
+  ]);
+
+  if (playersQuery.status === 'error') {
+    return <Alert title="Error">Something went wrong while fetching the leaderboard.</Alert>;
+  }
+
   return (
     <>
-      {props.lastUpdated && <LastUpdated time={props.lastUpdated} />}
-      {props.leaderboard && <Leaderboard leaderboard={props.leaderboard} />}
+      <Box pos="relative">
+        <LoadingOverlay
+          visible={playersQuery.isFetching || playersQuery.isFetchingNextPage}
+          zIndex={9999}
+          overlayProps={{ radius: 'md', blur: 1 }}
+        />
+        <LastUpdated
+          time={new Date(props.siteState.lastUpdated)}
+          updating={props.siteState.updating}
+        />
+        {sortedData && (
+          <Leaderboard leaderboard={sortedData} sortBy={sortBy} setSortBy={setSortBy} />
+        )}
+      </Box>
+      {playersQuery.hasNextPage && (
+        <Button
+          fullWidth
+          onClick={() => playersQuery.fetchNextPage()}
+          loading={playersQuery.isFetchingNextPage}
+        >
+          Load more
+        </Button>
+      )}
     </>
   );
 }
 
 export const getServerSideProps = (async (context) => {
-  const leaderboard = await db.player.findMany({
-    take: 250,
-    skip: 0,
-    orderBy: [
-      { rank: 'asc' }, // Primary sort by rank ascending
-      { updatedAt: 'desc' }, // Secondary sort by update time descending
-    ],
-    distinct: ['rank'], // Ensure each rank is represented only once
-    include: {
-      snapshots: {
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          rating: true,
-          rank: true,
-          createdAt: true,
-        },
-        take: 1,
-        skip: 1,
-      },
-    },
+  const limit = 100;
+  const sort = 'rank' satisfies PlayerListSortBy;
+
+  await trpcHelper.player.getLeaderboard.prefetchInfinite({
+    limit,
+    sort,
   });
 
-  const lastUpdatedPlayer = leaderboard.reduce((acc, player) =>
-    player.updatedAt > acc.updatedAt ? player : acc
-  );
-
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+  // context.res.setHeader('Cache-Control', 'no-store');
+
+  const siteState = await fetch(getUrl('/api/updated'), {
+    method: 'GET',
+    cache: 'no-cache',
+  }).then(
+    (res) =>
+      res.json() as Promise<{
+        lastUpdated: string;
+        updating: boolean;
+      }>
+  );
 
   return {
     props: {
-      leaderboard,
-      lastUpdated: lastUpdatedPlayer.updatedAt,
+      trpcState: trpcHelper.dehydrate(),
+      limit,
+      sort,
+      siteState,
     },
   };
 }) satisfies GetServerSideProps<{
-  leaderboard: SSRPlayer[];
-  lastUpdated: Date;
+  trpcState: DehydratedState;
+  limit: number;
+  sort: PlayerListSortBy;
+  siteState: {
+    lastUpdated: string;
+    updating: boolean;
+  };
 }>;

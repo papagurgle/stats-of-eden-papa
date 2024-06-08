@@ -3,6 +3,7 @@ import { env } from '~/env';
 import { fetchLeaderboard, loginWithCustomId } from '~/playfab/client';
 import { CharacterStats, LocationSchema, StatisticName } from '~/playfab/schema';
 import { db } from '~/server/db';
+import getUrl from '~/utils/getUrl';
 
 export type UpdateDBSuccess = {
   createdSnapshots: number;
@@ -19,6 +20,14 @@ export async function updateDB() {
       updatedSnapshots: 0,
       upsertedPlayers: 0,
     };
+
+    await fetch(getUrl('/api/updated'), {
+      method: 'POST',
+      body: JSON.stringify({
+        customId: env.CUSTOMID,
+        updating: true,
+      }),
+    });
 
     await loginWithCustomId({
       CustomId: env.CUSTOMID,
@@ -212,10 +221,28 @@ export async function updateDB() {
       startPosition += leaderboardData.Leaderboard.length;
     }
 
+    await fetch(getUrl('/api/updated'), {
+      method: 'POST',
+      body: JSON.stringify({
+        customId: env.CUSTOMID,
+        updating: false,
+        lastUpdated: true,
+      }),
+    });
+
     console.timeEnd('updateDB');
 
     return success;
   } catch (error) {
+    await fetch(getUrl('/api/updated'), {
+      method: 'POST',
+      body: JSON.stringify({
+        customId: env.CUSTOMID,
+        updating: false,
+        lastUpdated: true,
+      }),
+    });
+
     console.error('Error updating database:', error);
     throw error;
   }

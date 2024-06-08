@@ -68,6 +68,7 @@
 
 .winrate {
   @include larger-than($mantine-breakpoint-md) {
-    width: rem(150);
+    flex: 1 1 auto;
+    min-width: rem(100px);
   }
 }

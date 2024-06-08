@@ -6,12 +6,12 @@ import RankChange from '~/components/RankChange/RankChange';
 import Tier from '~/components/Tier/Tier';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
-import { type SSRPlayer } from '~/types/Player';
+import { type PlayerInfo } from '~/types/Player';
 import { getRankChange } from '~/utils/rankChange';
 import styles from './profile-banner.module.scss';
 
 export interface ProfileBannerProps {
-  player: SSRPlayer;
+  player: PlayerInfo;
   rankInExperience?: number;
 }
 

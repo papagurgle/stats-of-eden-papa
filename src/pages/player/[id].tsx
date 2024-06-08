@@ -8,11 +8,13 @@ import LastUpdated from '~/components/LastUpdated/LastUpdated';
 import ProfileBanner from '~/components/ProfileBanner/ProfileBanner';
 import RankChart from '~/components/RankChart/RankChart';
 import { db } from '~/server/db';
-import { type SSRPlayer } from '~/types/Player';
+import { type PlayerInfo } from '~/types/Player';
+import getUrl from '~/utils/getUrl';
 
 export default function PlayerPage({
   player,
   rankInExperience,
+  siteState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const id = router.query.id as string;
@@ -30,7 +32,7 @@ export default function PlayerPage({
           content={`Stats for player ${player.displayName} in the Duelists of Eden game`}
         />
       </Head>
-      <LastUpdated time={player.updatedAt} />
+      <LastUpdated time={player.updatedAt} updating={siteState.updating} />
       <ProfileBanner player={player} rankInExperience={rankInExperience} />
       <RankChart player={player} />
       <Space h="xl" />
@@ -74,8 +76,23 @@ export const getServerSideProps = (async (context) => {
 
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
-  return { props: { player, rankInExperience } };
+  const siteState = await fetch(getUrl('/api/updated'), {
+    method: 'GET',
+    cache: 'no-cache',
+  }).then(
+    (res) =>
+      res.json() as Promise<{
+        lastUpdated: string;
+        updating: boolean;
+      }>
+  );
+
+  return { props: { player, rankInExperience, siteState } };
 }) satisfies GetServerSideProps<{
-  player: SSRPlayer | null;
+  player: PlayerInfo | null;
   rankInExperience: number | undefined;
+  siteState: {
+    lastUpdated: string;
+    updating: boolean;
+  };
 }>;

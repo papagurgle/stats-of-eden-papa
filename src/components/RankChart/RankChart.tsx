@@ -1,10 +1,10 @@
 import { LineChart } from '@mantine/charts';
 import { Paper, Text, Title } from '@mantine/core';
 import { type Payload } from '~/types/LineChart';
-import { type SSRPlayer } from '~/types/Player';
+import { type PlayerInfo } from '~/types/Player';
 
 export interface RankChartProps {
-  player: SSRPlayer;
+  player: PlayerInfo;
 }
 
 interface ChartTooltipProps {
@@ -20,8 +20,6 @@ function formatDate(date: Date): string {
 }
 
 function ChartTooltip({ label, payload }: ChartTooltipProps) {
-  console.log('xd', payload);
-
   if (!payload) return null;
 
   return (
@@ -82,7 +80,7 @@ export default function RankChart({ player }: RankChartProps) {
         }}
         yAxisProps={{
           padding: {
-            bottom: 20,
+            bottom: 40,
             top: 40,
           },
           reversed: true,

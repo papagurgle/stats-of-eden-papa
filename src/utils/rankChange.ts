@@ -1,8 +1,8 @@
-import { type SSRPlayer } from '~/types/Player';
+import { type PlayerInfo } from '~/types/Player';
 
 export type RankChange = 'up' | 'down' | 'none';
 
-export function getRankChange(player: SSRPlayer): 'up' | 'down' | 'none' {
+export function getRankChange(player: PlayerInfo): 'up' | 'down' | 'none' {
   if (!player.snapshots || player.snapshots.length === 0) {
     return 'none';
   }

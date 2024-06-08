@@ -1,0 +1,58 @@
+@use '~/sass/mantine' as *;
+
+.menu {
+  @include larger-than($mantine-breakpoint-sm) {
+    display: none;
+  }
+}
+
+.sortWrapper {
+  background: var(--mantine-color-body);
+  display: none;
+  text-align: center;
+
+  @include larger-than($mantine-breakpoint-sm) {
+    display: flex;
+    align-items: center;
+    gap: var(--mantine-spacing-md);
+    top: 0;
+    position: sticky;
+    z-index: 100;
+  }
+}
+
+.tabs {
+  flex: 1 1 auto;
+}
+
+.tabsList {
+  display: block;
+
+  @include larger-than($mantine-breakpoint-sm) {
+    display: flex;
+  }
+}
+
+.tab {
+  width: 100%;
+
+  @include larger-than($mantine-breakpoint-sm) {
+    width: inherit;
+  }
+}
+
+.desktopOnly {
+  display: none;
+
+  @include larger-than($mantine-breakpoint-sm) {
+    display: block;
+  }
+}
+
+.mobileOnly {
+  display: block;
+
+  @include larger-than($mantine-breakpoint-sm) {
+    display: none;
+  }
+}

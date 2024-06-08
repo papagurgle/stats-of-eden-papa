@@ -1,6 +1,6 @@
 import { type Prisma } from '@prisma/client';
 
-export type SSRPlayer = Prisma.PlayerGetPayload<{
+export type PlayerInfo = Prisma.PlayerGetPayload<{
   include: {
     snapshots: {
       select: {

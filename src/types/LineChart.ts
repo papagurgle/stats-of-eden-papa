@@ -1,4 +1,4 @@
-import { type SSRPlayer } from '~/types/Player';
+import { type PlayerInfo } from '~/types/Player';
 
 export interface Payload {
   className: string;
@@ -12,6 +12,6 @@ export interface Payload {
   dataKey: string;
   color: string;
   value: number;
-  payload: SSRPlayer['snapshots'][0];
+  payload: PlayerInfo['snapshots'][0];
   hide: boolean;
 }
