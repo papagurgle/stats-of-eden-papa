@@ -30,14 +30,14 @@ export default function AboutPage() {
           />
         </Head>
         <Grid>
-          <Grid.Col span={{ md: 7 }} className="main">
+          <Grid.Col span={{ md: 6 }} className="main">
             <Title order={2} size="h1">
               About
             </Title>
             <p>This site is a work in progress. Stats are refreshed hourly.</p>
             <p>So far I have plans to add:</p>
             <ul>
-              <li>More than top 250. Currently I don&#39;t think I can host more on a free plan</li>
+              <li>More than top 500. Currently I don&#39;t think I can host more on a free plan</li>
               <li>Historical graphs on player rank, matches played, etc</li>
               <li>Character pages</li>
               <li>
@@ -52,7 +52,7 @@ export default function AboutPage() {
               discord at Reese <code>(its.reese)</code> or DM me directly.
             </p>
           </Grid.Col>
-          <Grid.Col span={{ md: 3 }} offset={{ md: 2 }} className="changelog-wrapper">
+          <Grid.Col span={{ md: 4 }} offset={{ md: 2 }} className="changelog-wrapper">
             <div className="changelog-inner">
               <Title order={3} size="h3">
                 Changelog
@@ -63,6 +63,7 @@ export default function AboutPage() {
               </Text>
               <Space h="xs" />
               <List size="xs">
+                <List.Item>Increased players fetched from 250 to 500</List.Item>
                 <List.Item>Added player sort</List.Item>
                 <List.Item>Added &quot;load more&quot; button</List.Item>
                 <List.Item>Updated &quot;last updated&quot; logic</List.Item>
