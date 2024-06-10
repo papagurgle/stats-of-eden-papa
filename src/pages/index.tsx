@@ -3,12 +3,10 @@ import { keepPreviousData, type DehydratedState } from '@tanstack/react-query';
 import { type GetServerSideProps, type InferGetServerSidePropsType } from 'next';
 import { useEffect, useState } from 'react';
 import Alert from '~/components/Alert/Alert';
-import LastUpdated from '~/components/LastUpdated/LastUpdated';
 import Leaderboard from '~/components/Leaderboard/Leaderboard';
 import { trpcHelper } from '~/pages/api/trpc/[trpc]';
 import { type PlayerInfo } from '~/types/Player';
 import { api } from '~/utils/api';
-import getUrl from '~/utils/getUrl';
 import { sortData, type PlayerListSortBy } from '~/utils/sortData';
 
 export default function IndexPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -53,10 +51,6 @@ export default function IndexPage(props: InferGetServerSidePropsType<typeof getS
           zIndex={9999}
           overlayProps={{ radius: 'md', blur: 1 }}
         />
-        <LastUpdated
-          time={new Date(props.siteState.lastUpdated)}
-          updating={props.siteState.updating}
-        />
         {sortedData && (
           <Leaderboard leaderboard={sortedData} sortBy={sortBy} setSortBy={setSortBy} />
         )}
@@ -86,31 +80,15 @@ export const getServerSideProps = (async (context) => {
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
   // context.res.setHeader('Cache-Control', 'no-store');
 
-  const siteState = await fetch(getUrl('/api/updated'), {
-    method: 'GET',
-    cache: 'no-cache',
-  }).then(
-    (res) =>
-      res.json() as Promise<{
-        lastUpdated: string;
-        updating: boolean;
-      }>
-  );
-
   return {
     props: {
       trpcState: trpcHelper.dehydrate(),
       limit,
       sort,
-      siteState,
     },
   };
 }) satisfies GetServerSideProps<{
   trpcState: DehydratedState;
   limit: number;
   sort: PlayerListSortBy;
-  siteState: {
-    lastUpdated: string;
-    updating: boolean;
-  };
 }>;
