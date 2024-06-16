@@ -14,7 +14,6 @@ jobs:
     env:
       NODE_ENV: production
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DIRECT_URL: ${{ secrets.DIRECT_URL }}
       CUSTOMID: ${{ secrets.CUSTOMID }}
       NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: ${{ secrets.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL }}
     runs-on: ubuntu-latest

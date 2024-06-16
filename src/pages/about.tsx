@@ -38,8 +38,11 @@ export default function AboutPage() {
             <p>So far I have plans to add:</p>
             <ul>
               <li>More than top 500. Currently I don&#39;t think I can host more on a free plan</li>
-              <li>Historical graphs on player rank, matches played, etc</li>
               <li>Character pages</li>
+              <li>Country pages</li>
+              <li>Title/Profile Banners</li>
+              <li>Past display names</li>
+              <li>Fix name sort to be case insensitive</li>
               <li>
                 Global stats (top exp, top played characters, matches played, aggregated stats, etc)
               </li>
