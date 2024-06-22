@@ -74,12 +74,12 @@ export function getBanner(banner: Player['banner']): Banner | undefined {
   switch (banner) {
     case '310_Suzaki_Chiretta_Banner':
       return {
-        bg: Suzaki_Gunner_A_Banner_310,
+        bg: Suzaki_Chiretta_Banner_310,
         position: 'center',
       };
     case '310_Suzaki_Gunner_A_Banner':
       return {
-        bg: Suzaki_Chiretta_Banner_310,
+        bg: Suzaki_Gunner_A_Banner_310,
         position: 'center',
       };
     case '310_Suzaki_Gunner_Banner':
