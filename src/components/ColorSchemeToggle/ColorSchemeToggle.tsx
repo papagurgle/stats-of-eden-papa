@@ -1,7 +1,7 @@
 import { UnstyledButton, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import cx from 'classnames';
-import classes from './color-scheme-toggle.module.scss';
+import styles from './color-scheme-toggle.module.scss';
 
 export function ColorSchemeToggle() {
   const { setColorScheme } = useMantineColorScheme();
@@ -9,12 +9,12 @@ export function ColorSchemeToggle() {
 
   return (
     <UnstyledButton
-      className={classes.control}
+      className={styles.control}
       aria-label="Toggle color scheme"
       onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
     >
-      <IconSun className={cx(classes.icon, classes.light)} stroke={1.5} />
-      <IconMoon className={cx(classes.icon, classes.dark)} stroke={1.5} />
+      <IconSun className={cx(styles.icon, styles.light)} stroke={1.5} />
+      <IconMoon className={cx(styles.icon, styles.dark)} stroke={1.5} />
     </UnstyledButton>
   );
 }

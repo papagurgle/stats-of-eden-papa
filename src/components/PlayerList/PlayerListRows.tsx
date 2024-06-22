@@ -1,4 +1,4 @@
-import { Anchor, Group, Image, Table, Text } from '@mantine/core';
+import { Anchor, Group, Image, Table, Text, Tooltip } from '@mantine/core';
 import NextImage from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
@@ -6,6 +6,7 @@ import Flag from '~/components/Flag/Flag';
 import RankChange from '~/components/RankChange/RankChange';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
+import { getLevel } from '~/game/levels';
 import { getTier } from '~/game/tiers';
 import { type PlayerInfo } from '~/types/Player';
 import { getRankChange } from '~/utils/rankChange';
@@ -23,6 +24,18 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
   const topCharacter = getTopCharacter(player);
   const tier = getTier(player.rating ?? 0);
   const linkRef = useRef<HTMLAnchorElement>(null);
+  const PlayerName = (
+    <Anchor
+      fw="bold"
+      size="sm"
+      href={`/player/${player.playFabId}`}
+      component={Link}
+      className={styles.name}
+      ref={linkRef}
+    >
+      {player.displayName}
+    </Anchor>
+  );
 
   function handleRowClick() {
     const isTextSelected = window.getSelection()?.toString();
@@ -54,16 +67,7 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
             alt={topCharacter.name}
             className={styles.character}
           />
-          <Anchor
-            fw="bold"
-            size="sm"
-            href={`/player/${player.playFabId}`}
-            component={Link}
-            className={styles.name}
-            ref={linkRef}
-          >
-            {player.displayName}
-          </Anchor>
+          {player.title ? <Tooltip label={player.title}>{PlayerName}</Tooltip> : PlayerName}
           <Flag city={player.city} country={player.countryCode} size={15} />
         </div>
       </Table.Td>
@@ -74,7 +78,11 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
         </div>
       </Table.Td>
       <Table.Td>{player.rating}</Table.Td>
-      <Table.Td className={styles.desktopOnly}>{player.experience.toLocaleString()}</Table.Td>
+      <Table.Td className={styles.desktopOnly}>
+        <Tooltip label={`${player.experience.toLocaleString()} experience`}>
+          <span>Lv. {getLevel(player.experience, 'profile')}</span>
+        </Tooltip>
+      </Table.Td>
       <Table.Td>
         <Group gap="xs" className={styles.wins}>
           <Winrate
@@ -83,7 +91,8 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
             className={styles.winrate}
           />
           <Text size="xs">
-            {Math.round((player.rankedWins / (player.rankedWins + player.rankedLosses)) * 100)}%
+            {Math.round((player.rankedWins / (player.rankedWins + player.rankedLosses) || 0) * 100)}
+            %
           </Text>
         </Group>
       </Table.Td>

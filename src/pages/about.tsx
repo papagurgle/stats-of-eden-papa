@@ -10,6 +10,7 @@ export default function AboutPage() {
         @media (min-width: ${theme.breakpoints?.md}) {
           .changelog-inner {
             direction: rtl;
+            padding-inline-end: 2em;
           }
         }
       `}</style>
@@ -46,6 +47,10 @@ export default function AboutPage() {
               <li>
                 Global stats (top exp, top played characters, matches played, aggregated stats, etc)
               </li>
+              <li>
+                A &quot;most played&quot;, or &quot;most experience&quot; feature to highlight
+                active players
+              </li>
             </ul>
             <p>
               If you have any feedback you can find me on the{' '}
@@ -60,6 +65,20 @@ export default function AboutPage() {
               <Title order={3} size="h3">
                 Changelog
               </Title>
+              <Space h="xs" />
+              <Text fw="bold" size="sm">
+                June 22nd, 2024
+              </Text>
+              <Space h="xs" />
+              <List size="xs">
+                <List.Item>
+                  Add <Link href="/characters">characters</Link> page
+                </List.Item>
+                <List.Item>
+                  Add player titles & banners (If you don&apos;t see it, try reapplying it ingame)
+                </List.Item>
+                <List.Item>Add previously known names</List.Item>
+              </List>
               <Space h="xs" />
               <Text fw="bold" size="sm">
                 June 7th, 2024

@@ -62,6 +62,8 @@
 }
 
 .rank {
+  container-type: inline-size;
+  // overflow: hidden;
   background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
   color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
   border-radius: var(--mantine-radius-default);
@@ -70,6 +72,10 @@
   &.first {
     background: color-mix(in srgb, currentColor 20%, transparent);
     color: light-dark(var(--mantine-primary-color-6), var(--mantine-primary-color-3));
+
+    .rankInner {
+      font-size: max(var(--mantine-font-size-lg), var(--mantine-font-size-md) + 1cqi);
+    }
   }
 
   &.second {
@@ -81,6 +87,10 @@
     background: color-mix(in srgb, currentColor 20%, transparent);
     color: light-dark(var(--mantine-color-red-9), var(--mantine-color-red-3));
   }
+}
+
+.rankInner {
+  font-size: max(var(--mantine-font-size-md), var(--mantine-font-size-md) + 1cqi);
 }
 
 .nameLink {

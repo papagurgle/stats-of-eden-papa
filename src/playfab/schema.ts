@@ -82,73 +82,28 @@ export const LoginWithCustomIDResponseSchema = z.object({
   data: LoginWithCustomIDResponseDataSchema,
 });
 
-// Just for reference
-export enum StatisticName {
-  OneVsOneRatingDeviationDemo = 'OneVsOneRatingDeviationDemo',
-  OneVsOneUnratedRatingDemo = 'OneVsOneUnratedRatingDemo',
-  OneVsOneUnratedRatingDeviationDemo = 'OneVsOneUnratedRatingDeviationDemo',
-  OneVsOneUnratedRatingBeta = 'OneVsOneUnratedRatingBeta',
-  OneVsOneUnratedRatingDeviationBeta = 'OneVsOneUnratedRatingDeviationBeta',
-  TerraExperience = 'TerraExperience',
-  QueenExperience = 'QueenExperience',
-  RevaExperience = 'RevaExperience',
-  SelicyExperience = 'SelicyExperience',
-  VioletteExperience = 'VioletteExperience',
-  MaypulExperience = 'MaypulExperience',
-  ChirettaExperience = 'ChirettaExperience',
-  GunnerExperience = 'GunnerExperience',
-  DreadwyrmExperience = 'DreadwyrmExperience',
-  ShisoExperience = 'ShisoExperience',
-  NeeraExperience = 'NeeraExperience',
-  HazelExperience = 'HazelExperience',
-  HarissaExperience = 'HarissaExperience',
-  SaffronExperience = 'SaffronExperience',
-  ShopkeeperExperience = 'ShopkeeperExperience',
-  OneVsOneUnratedMatchesBeta = 'OneVsOneUnratedMatchesBeta',
-  OneVsOneMatchesBeta = 'OneVsOneMatchesBeta',
-  OneVsOneRatingBeta = 'OneVsOneRatingBeta',
-  OneVsOneMatchesZero = 'OneVsOneMatchesZero',
-  OneVsOneUnratedMatchesZero = 'OneVsOneUnratedMatchesZero',
-  OneVsOneUnratedRatingZero = 'OneVsOneUnratedRatingZero',
-  OneVsOnePeakRatingZero = 'OneVsOnePeakRatingZero',
-  OneVsOneLosses = 'OneVsOneLosses',
-  OneVsOneRankedLossesZero = 'OneVsOneRankedLossesZero',
-  ProfileExperience = 'ProfileExperience',
-  OneVsOneWins = 'OneVsOneWins',
-  OneVsOneRatingZero = 'OneVsOneRatingZero',
-  OneVsOneRankedWinsZero = 'OneVsOneRankedWinsZero',
-  RandomExperience = 'RandomExperience',
-  PedaliumExperience = 'PedaliumExperience',
-  undefinedExperience = 'undefinedExperience',
-  OneVsOneRatingPreAlphaTest = 'OneVsOneRatingPreAlphaTest',
-  OneVsOneUnratedRatingDeviationPreAlphaTest = 'OneVsOneUnratedRatingDeviationPreAlphaTest',
-  OneVsOneRatingDeviationPreAlphaTest = 'OneVsOneRatingDeviationPreAlphaTest',
-  OneVsOneUnratedRatingPreAlphaTest = 'OneVsOneUnratedRatingPreAlphaTest',
-  MyrrhExperience = 'MyrrhExperience',
-  SelicyTestExperience = 'SelicyTestExperience',
-  HemlockExperience = 'HemlockExperience',
-  RoseMaryExperience = 'RoseMaryExperience',
-  GaramExperience = 'GaramExperience',
-  OneVsOneRatingDeviationBeta = 'OneVsOneRatingDeviationBeta',
-  OneVsOneRatingDeviation = 'OneVsOneRatingDeviation',
-  OneVsOneElo = 'OneVsOneElo',
-  OrobanExperience = 'OrobanExperience',
-}
-
-export enum CharacterStats {
-  TerraExperience = 'TerraExperience',
-  QueenExperience = 'QueenExperience',
-  RevaExperience = 'RevaExperience',
-  SelicyExperience = 'SelicyExperience',
-  VioletteExperience = 'VioletteExperience',
-  MaypulExperience = 'MaypulExperience',
-  ChirettaExperience = 'ChirettaExperience',
-  GunnerExperience = 'GunnerExperience',
-  DreadwyrmExperience = 'DreadwyrmExperience',
-  ShisoExperience = 'ShisoExperience',
-  NeeraExperience = 'NeeraExperience',
-  HazelExperience = 'HazelExperience',
-  HarissaExperience = 'HarissaExperience',
-  SaffronExperience = 'SaffronExperience',
-  ShopkeeperExperience = 'ShopkeeperExperience',
-}
+export const GetUserDataResponseSchema = z.object({
+  code: z.number(),
+  status: z.string(),
+  data: z.object({
+    Data: z
+      .object({
+        SelectedBanner: z
+          .object({
+            Value: z.string(),
+            LastUpdated: z.string(),
+            Permission: z.string(),
+          })
+          .optional(),
+        SelectedTitle: z
+          .object({
+            Value: z.string(),
+            LastUpdated: z.string(),
+            Permission: z.string(),
+          })
+          .optional(),
+      })
+      .optional(),
+    DataVersion: z.number(),
+  }),
+});

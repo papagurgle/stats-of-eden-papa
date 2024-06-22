@@ -7,7 +7,6 @@ import {
   Flex,
   Grid,
   Group,
-  Text,
   Title,
   type MantineSize,
 } from '@mantine/core';
@@ -21,9 +20,14 @@ export default function Header() {
   const breakpoint: MantineSize = 'xs';
   const [opened, { toggle, close }] = useDisclosure(false);
   const Links = () => (
-    <Anchor href="/about" component={Link} className={styles.link}>
-      About
-    </Anchor>
+    <div className={styles.drawer}>
+      <Anchor href="/characters" component={Link} className={styles.link}>
+        Characters
+      </Anchor>
+      <Anchor href="/about" component={Link} className={styles.link}>
+        About
+      </Anchor>
+    </div>
   );
 
   return (
@@ -44,9 +48,6 @@ export default function Header() {
               />
               <Anchor href="/" component={Link} className={styles.logo} underline="never" unstyled>
                 <Title size="h3">Stats of Eden</Title>
-                <Text size="xs" component="span" className={styles.logoNote}>
-                  (beta)
-                </Text>
               </Anchor>
             </Flex>
           </Grid.Col>

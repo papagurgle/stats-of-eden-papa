@@ -4,6 +4,7 @@ import { Title, Tooltip } from '@mantine/core';
 import { type Player } from '@prisma/client';
 import { getImageProps } from 'next/image';
 import { Characters } from '~/game/characters';
+import { getLevel } from '~/game/levels';
 import { type TickProps } from '~/types/BarChart';
 
 export interface CharacterChartProps {
@@ -28,26 +29,46 @@ export default function CharacterChart({ player }: CharacterChartProps) {
         tickLine="xy"
         xAxisProps={{
           interval: 0,
+          height: 50,
           tick({ x, y, payload }: TickProps) {
+            const character = Characters.find((c) => c.name === payload.value);
+
+            if (!character) return <></>;
+
+            const characterExp = player[character.statName];
             const labelSize = 20;
-            const characterImage = Characters.find((c) => c.name === payload.value)?.icon ?? '';
-            const characterName = Characters.find((c) => c.name === payload.value)?.name ?? '';
             const imageProps = getImageProps({
-              src: characterImage,
+              src: character.icon,
               alt: payload.value,
               width: labelSize,
               height: labelSize,
             });
+            const characterLvl =
+              typeof characterExp === 'number' ? getLevel(characterExp, 'character') : 0;
 
             return (
-              <Tooltip label={characterName}>
-                <image
-                  href={imageProps.props.src}
-                  height={labelSize}
-                  width={labelSize}
-                  x={x - 10}
-                  y={y}
-                />
+              <Tooltip label={character.name}>
+                <g>
+                  <text
+                    x={x}
+                    y={y + 10}
+                    style={{
+                      fontSize: 10,
+                      fill: 'var(--mantine-color-white)',
+                      textAnchor: 'middle',
+                      // transform: 'translate(-10px, 0)',
+                    }}
+                  >
+                    Lv. {characterLvl}
+                  </text>
+                  <image
+                    href={imageProps.props.src}
+                    height={labelSize}
+                    width={labelSize}
+                    x={x - 10}
+                    y={y + 20}
+                  />
+                </g>
               </Tooltip>
             );
           },
@@ -59,7 +80,7 @@ export default function CharacterChart({ player }: CharacterChartProps) {
 
 function mapCharactersToData(player: Player) {
   return Characters.map((character) => {
-    const exp = player[`${character.name.toLowerCase()}Exp` as keyof Player];
+    const exp = player[character.statName];
 
     return {
       character: character.name,

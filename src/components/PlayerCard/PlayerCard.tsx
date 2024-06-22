@@ -1,4 +1,4 @@
-import { Anchor, Flex, Group, Image, Stack, Text } from '@mantine/core';
+import { Anchor, Flex, Group, Image, Stack, Text, Tooltip } from '@mantine/core';
 import { type Player } from '@prisma/client';
 import cx from 'classnames';
 import NextImage from 'next/image';
@@ -7,6 +7,7 @@ import Flag from '~/components/Flag/Flag';
 import Tier from '~/components/Tier/Tier';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
+import { getLevel } from '~/game/levels';
 import styles from './PlayerCard.module.scss';
 
 export interface PlayerCardProps extends React.ComponentProps<typeof Stack> {
@@ -15,6 +16,7 @@ export interface PlayerCardProps extends React.ComponentProps<typeof Stack> {
 
 export default function PlayerCard({ player, ...props }: PlayerCardProps) {
   const topCharacter = getTopCharacter(player);
+  const PlayerName = <span className={styles.name}>{player.displayName}</span>;
 
   return (
     <Stack gap="xs" justify="space-between" className={cx(styles.card, props.className)}>
@@ -32,7 +34,7 @@ export default function PlayerCard({ player, ...props }: PlayerCardProps) {
             player.rank === 3 && styles.third
           )}
         >
-          #{player.rank}
+          <span className={styles.rankInner}>#{player.rank}</span>
         </Flex>
         <Image
           component={NextImage}
@@ -53,7 +55,7 @@ export default function PlayerCard({ player, ...props }: PlayerCardProps) {
           lh="xs"
           className={styles.nameLink}
         >
-          <span className={styles.name}>{player.displayName}</span>
+          {player.title ? <Tooltip label={player.title}>{PlayerName}</Tooltip> : PlayerName}
           <Flag city={player.city} country={player.countryCode} size={20} />
         </Anchor>
       </Group>
@@ -62,7 +64,10 @@ export default function PlayerCard({ player, ...props }: PlayerCardProps) {
           <Tier rating={player.rating ?? 0} size="small" />
         </Group>
         <Group gap="xs" className={styles.tierInfo}>
-          <Text size="xs">Experience: {player.experience.toLocaleString()}</Text>
+          <Text size="xs">
+            Lv. {getLevel(player.experience, 'profile')} ({player.experience.toLocaleString()}{' '}
+            experience)
+          </Text>
         </Group>
         <Group gap="xs" className={styles.wins}>
           <Winrate wins={player.rankedWins} losses={player.rankedLosses} />

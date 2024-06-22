@@ -101,6 +101,7 @@ export const playerRouter = createTRPCRouter({
               createdAt: 'desc',
             },
             select: {
+              displayName: true,
               rating: true,
               rank: true,
               createdAt: true,

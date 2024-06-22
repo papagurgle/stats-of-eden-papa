@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,8 +9,10 @@ datasource db {
 
 model Player {
   playFabId        String           @id
-  displayName      String // Sometimes the API returns nothing
-  experience       Int // Profile experience
+  displayName      String
+  experience       Int
+  title            String?
+  banner           String?
   rank             Int?
   rating           Int?
   rankedWins       Int
@@ -43,20 +42,21 @@ model Player {
   shopkeeperExp    Int?
   hazelExp         Int?
   shisoExp         Int?
-  snapshots        PlayerSnapshot[]
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+  snapshots        PlayerSnapshot[]
 
-  @@index(playFabId)
+  @@index([playFabId])
 }
 
 model PlayerSnapshot {
   id               String   @id @default(uuid())
-  player           Player   @relation(fields: [playerPlayFabId], references: [playFabId])
   playerPlayFabId  String
   playFabId        String
   displayName      String
   experience       Int
+  title            String?
+  banner           String?
   rank             Int?
   rating           Int?
   rankedWins       Int
@@ -88,7 +88,8 @@ model PlayerSnapshot {
   shisoExp         Int?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  player           Player   @relation(fields: [playerPlayFabId], references: [playFabId])
 
   @@unique([playerPlayFabId, createdAt])
-  @@index(playFabId)
+  @@index([playFabId])
 }

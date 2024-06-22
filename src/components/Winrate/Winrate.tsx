@@ -8,14 +8,21 @@ export interface WinrateProps extends React.ComponentProps<typeof Progress.Root>
 }
 
 export default function Winrate({ wins, losses, className, ...props }: WinrateProps) {
+  const noGames = wins + losses === 0;
+
   return (
     <Tooltip label={`${wins} Wins - ${losses} Losses`}>
       <Progress.Root size={13} className={className} {...props}>
-        <Progress.Section value={Math.round((wins / (wins + losses)) * 100)} color="cyan">
+        <Progress.Section
+          // prettier-ignore
+          value={Math.round(noGames ? (wins / (wins + losses)) : 0.5) * 100}
+          color="cyan"
+        >
           <Progress.Label className={styles.label}>{wins}W</Progress.Label>
         </Progress.Section>
         <Progress.Section
-          value={Math.round((losses / (wins + losses)) * 100)}
+          // prettier-ignore
+          value={Math.round(noGames ? (losses / (wins + losses)) : 0.5) * 100}
           className={styles.label}
           color="pink"
         >

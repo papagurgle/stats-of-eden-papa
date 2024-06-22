@@ -1,9 +1,6 @@
-import { type Player } from '@prisma/client';
+import { Prisma, type Player } from '@prisma/client';
 import { type StaticImageData } from 'next/image';
-import ShotGoodBg from '~/assets/backgrounds/ShotGood_01c_05.png';
-import ForestBg from '~/assets/backgrounds/td_landscape_forest_se2x.png';
 import MountainBg from '~/assets/backgrounds/td_landscape_mountains_sf2x.png';
-import WhiteBg from '~/assets/backgrounds/td_landscape_white2x.png';
 import ChirettaSplash from '~/assets/characters/Chiretta_Splash_Transparent.png';
 import DreadwyrmSplash from '~/assets/characters/Dreadwyrm_Splash_Transparent.png';
 import GunnerSplash from '~/assets/characters/Gunner_Splash_Transparent.png';
@@ -34,6 +31,7 @@ import ShisoIcon from '~/assets/icons/200px-DoE_Shiso_IconSqu.png';
 import ShopkeeperIcon from '~/assets/icons/200px-DoE_Shopkeeper_IconSqu.png';
 import TerraIcon from '~/assets/icons/200px-DoE_Terra_IconSqu.png';
 import VioletteIcon from '~/assets/icons/200px-DoE_Violette_IconSqu.png';
+import { getBanner, type Banner } from '~/utils/banner';
 // import ArenaBg from '~/assets/stages/Arena-bg.png';
 // import ArenaBgD from '~/assets/stages/Arena-bg-dark.png';
 // import EdenBg from '~/assets/stages/Eden-bg.png';
@@ -47,112 +45,128 @@ export type Character = {
   name: string;
   icon: StaticImageData;
   splash: StaticImageData;
-  bg: StaticImageData;
+  banner: Banner;
+  statName: Prisma.PlayerScalarFieldEnum;
 };
 
 export const Chiretta: Character = {
   name: 'Chiretta',
   icon: ChirettaIcon,
   splash: ChirettaSplash,
-  bg: getBackgroundImage('Chiretta'),
+  banner: getBackgroundImage('Chiretta_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.chirettaExp,
 };
 
 export const Dreadwyrm: Character = {
   name: 'Dreadwyrm',
   icon: DreadwyrmIcon,
   splash: DreadwyrmSplash,
-  bg: getBackgroundImage('Dreadwyrm'),
+  banner: getBackgroundImage('Dreadwyrm_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.dreadwyrmExp,
 };
 
 export const Gunner: Character = {
   name: 'Gunner',
   icon: GunnerIcon,
   splash: GunnerSplash,
-  bg: getBackgroundImage('Gunner'),
+  banner: getBackgroundImage('Gunner_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.gunnerExp,
 };
 
 export const Harissa: Character = {
   name: 'Harissa',
   icon: HarissaIcon,
   splash: HarissaSplash,
-  bg: getBackgroundImage('Harissa'),
+  banner: getBackgroundImage('Harissa_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.harissaExp,
 };
 
 export const Hazel: Character = {
   name: 'Hazel',
   icon: HazelIcon,
   splash: HazelSplash,
-  bg: getBackgroundImage('Hazel'),
+  banner: getBackgroundImage('Hazel_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.hazelExp,
 };
 
 export const Maypul: Character = {
   name: 'Maypul',
   icon: MaypulIcon,
   splash: MaypulSplash,
-  bg: getBackgroundImage('Maypul'),
+  banner: getBackgroundImage('Maypul_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.maypulExp,
 };
 
 export const Neera: Character = {
   name: 'Neera',
   icon: NeeraIcon,
   splash: NeeraSplash,
-  bg: getBackgroundImage('Neera'),
+  banner: getBackgroundImage('Neera_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.neeraExp,
 };
 
 export const Queen: Character = {
   name: 'Queen',
   icon: QueenIcon,
   splash: QueenSplash,
-  bg: getBackgroundImage('Queen'),
+  banner: getBackgroundImage('Queen_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.queenExp,
 };
 
 export const Reva: Character = {
   name: 'Reva',
   icon: RevaIcon,
   splash: RevaSplash,
-  bg: getBackgroundImage('Reva'),
+  banner: getBackgroundImage('Reva_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.revaExp,
 };
 
 export const Saffron: Character = {
   name: 'Saffron',
   icon: SaffronIcon,
   splash: SaffronSplash,
-  bg: getBackgroundImage('Saffron'),
+  banner: getBackgroundImage('Saffron_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.saffronExp,
 };
 
 export const Selicy: Character = {
   name: 'Selicy',
   icon: SelicyIcon,
   splash: SelicySplash,
-  bg: getBackgroundImage('Selicy'),
+  banner: getBackgroundImage('Selicy_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.selicyExp,
 };
 
 export const Shiso: Character = {
   name: 'Shiso',
   icon: ShisoIcon,
   splash: ShisoSplash,
-  bg: getBackgroundImage('Shiso'),
+  banner: getBackgroundImage('Shiso_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.shisoExp,
 };
 
 export const Shopkeeper: Character = {
   name: 'Shopkeeper',
   icon: ShopkeeperIcon,
   splash: ShopkeeperSplash,
-  bg: getBackgroundImage('Shopkeeper'),
+  banner: getBackgroundImage('Shopkeeper_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.shopkeeperExp,
 };
 
 export const Terra: Character = {
   name: 'Terra',
   icon: TerraIcon,
   splash: TerraSplash,
-  bg: getBackgroundImage('Terra'),
+  banner: getBackgroundImage('Terra_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.terraExp,
 };
 
 export const Violette: Character = {
   name: 'Violette',
   icon: VioletteIcon,
   splash: VioletteSplash,
-  bg: getBackgroundImage('Violette'),
+  banner: getBackgroundImage('Violette_Basic-Banner'),
+  statName: Prisma.PlayerScalarFieldEnum.violetteExp,
 };
 
 export const Characters: Character[] = [
@@ -253,21 +267,15 @@ export function getTopCharacter(player: Player): Character {
   return topCharacter;
 }
 
-// Function to return either the ShotGoodBg, ForestBg, MountainBg, WhiteBg based on the character. Hash the character name and use the modulo operator to get a number between 0 and 3. Use that number to select the background image.
-export function getBackgroundImage(character: Character | string): StaticImageData {
-  const backgrounds = [ShotGoodBg, ForestBg, MountainBg, WhiteBg];
-  const index =
-    Math.abs(hashCode(typeof character === 'string' ? character : character.name)) %
-    backgrounds.length;
+export function getBackgroundImage(filename: string): Banner {
+  const basicBanner = getBanner(filename);
 
-  return backgrounds[index] ?? ShotGoodBg;
-}
-
-function hashCode(name: string): number {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  if (basicBanner) {
+    return basicBanner;
+  } else {
+    return {
+      bg: MountainBg,
+      position: 'center',
+    };
   }
-
-  return hash;
 }

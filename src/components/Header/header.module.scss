@@ -32,3 +32,13 @@
     color: light-dark(var(--mantine-primary-color-7), var(--mantine-primary-color-5));
   }
 }
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+
+  @include larger-than($mantine-breakpoint-xs) {
+    flex-direction: row;
+  }
+}

@@ -27,7 +27,6 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
-    "@vercel/analytics": "^1.2.2",
     "classnames": "^2.5.1",
     "javascript-time-ago": "^2.5.10",
     "next": "^14.2.3",

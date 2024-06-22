@@ -1,25 +1,12 @@
-import { type PlayerSnapshot, type Prisma } from '@prisma/client';
 import { env } from '~/env';
 import { fetchLeaderboard, loginWithCustomId } from '~/playfab/client';
-import { CharacterStats, LocationSchema, StatisticName } from '~/playfab/schema';
-import { db } from '~/server/db';
+import { insertPlayers } from '~/server/insert-players';
+import { StatisticName } from '~/types/Characters';
 import getUrl from '~/utils/getUrl';
-
-export type UpdateDBSuccess = {
-  createdSnapshots: number;
-  updatedSnapshots: number;
-  upsertedPlayers: number;
-};
 
 export async function updateDB() {
   try {
     console.time('updateDB');
-
-    const success: UpdateDBSuccess = {
-      createdSnapshots: 0,
-      updatedSnapshots: 0,
-      upsertedPlayers: 0,
-    };
 
     await fetch(getUrl('/api/updated'), {
       method: 'POST',
@@ -34,192 +21,56 @@ export async function updateDB() {
       CreateAccount: false,
     });
 
-    const totalRecordsToFetch = 500;
-    let startPosition = 0;
-    let recordsFetched = 0;
+    let foundPlayfabIds: string[] = [];
 
-    while (recordsFetched < totalRecordsToFetch) {
-      const fetchCount = Math.min(100, totalRecordsToFetch - recordsFetched);
+    async function getLeaderboardData(statisticName: StatisticName, totalRecordsToFetch: number) {
+      let startPosition = 0;
+      let recordsFetched = 0;
 
-      const leaderboardData = await fetchLeaderboard({
-        MaxResultsCount: fetchCount,
-        StartPosition: startPosition,
-        StatisticName: StatisticName.OneVsOneRatingZero.toString(),
-      });
+      console.log(`\nStarting to fetch ${statisticName} leaderboard data...\n`);
 
-      for (const playerData of leaderboardData.Leaderboard) {
-        const location = LocationSchema.safeParse(playerData.Profile.Locations[0]);
+      while (recordsFetched < totalRecordsToFetch) {
+        const fetchCount = Math.min(100, totalRecordsToFetch - recordsFetched);
 
-        if (!location.success) {
-          console.error(
-            `Failed to parse location data for ${playerData.PlayFabId}:`,
-            location.error
-          );
-          continue;
-        }
-
-        const player = {
-          playFabId: playerData.PlayFabId,
-          displayName: playerData.DisplayName ?? '',
-          experience:
-            playerData.Profile.Statistics.find(
-              (statistic) => statistic.Name === StatisticName.ProfileExperience.toString()
-            )?.Value ?? 0,
-          rank: playerData.Position !== undefined ? playerData.Position + 1 : undefined,
-          rating: playerData.StatValue,
-          rankedWins:
-            playerData.Profile.Statistics.find(
-              (statistic) => statistic.Name === StatisticName.OneVsOneRankedWinsZero.toString()
-            )?.Value ?? 0,
-          rankedLosses:
-            playerData.Profile.Statistics.find(
-              (statistic) => statistic.Name === StatisticName.OneVsOneRankedLossesZero.toString()
-            )?.Value ?? 0,
-          rankedPeakRating: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === StatisticName.OneVsOnePeakRatingZero.toString()
-          )?.Value,
-          season: 'Zero',
-          unrankedWins:
-            playerData.Profile.Statistics.find(
-              (statistic) => statistic.Name === StatisticName.OneVsOneWins.toString()
-            )?.Value ?? 0,
-          unrankedLosses:
-            playerData.Profile.Statistics.find(
-              (statistic) => statistic.Name === StatisticName.OneVsOneLosses.toString()
-            )?.Value ?? 0,
-          unrankedRating: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === StatisticName.OneVsOneUnratedRatingZero.toString()
-          )?.Value,
-          continentCode: location.data.ContinentCode,
-          countryCode: location.data.CountryCode,
-          city: location.data.City,
-          latitude: location.data.Latitude,
-          longitude: location.data.Longitude,
-          dreadwyrmExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.DreadwyrmExperience.toString()
-          )?.Value,
-          selicyExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.SelicyExperience.toString()
-          )?.Value,
-          saffronExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.SaffronExperience.toString()
-          )?.Value,
-          chirettaExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.ChirettaExperience.toString()
-          )?.Value,
-          maypulExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.MaypulExperience.toString()
-          )?.Value,
-          gunnerExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.GunnerExperience.toString()
-          )?.Value,
-          harissaExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.HarissaExperience.toString()
-          )?.Value,
-          revaExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.RevaExperience.toString()
-          )?.Value,
-          violetteExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.VioletteExperience.toString()
-          )?.Value,
-          neeraExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.NeeraExperience.toString()
-          )?.Value,
-          terraExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.TerraExperience.toString()
-          )?.Value,
-          queenExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.QueenExperience.toString()
-          )?.Value,
-          shopkeeperExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.ShopkeeperExperience.toString()
-          )?.Value,
-          hazelExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.HazelExperience.toString()
-          )?.Value,
-          shisoExp: playerData.Profile.Statistics.find(
-            (statistic) => statistic.Name === CharacterStats.ShisoExperience.toString()
-          )?.Value,
-        } satisfies Prisma.PlayerCreateInput;
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-
-        const existingSnapshot = await db.playerSnapshot.findFirst({
-          where: {
-            playFabId: playerData.PlayFabId,
-            createdAt: {
-              gte: today,
-              lt: tomorrow,
-            },
-          },
+        const leaderboardData = await fetchLeaderboard({
+          MaxResultsCount: fetchCount,
+          StartPosition: startPosition,
+          StatisticName: statisticName.toString(),
         });
 
-        let playerSnapshotPayload: PlayerSnapshot;
+        const insertedPlayers = await insertPlayers(
+          leaderboardData.Leaderboard,
+          foundPlayfabIds,
+          statisticName,
+          startPosition
+        );
 
-        if (existingSnapshot) {
-          playerSnapshotPayload = await db.playerSnapshot.update({
-            where: { id: existingSnapshot.id },
-            data: {
-              ...player,
-            },
-          });
+        foundPlayfabIds = [...foundPlayfabIds, ...insertedPlayers];
 
-          console.log(`Updated snapshot for ${player.playFabId} (${player.displayName})`);
-          success.updatedSnapshots++;
-        } else {
-          playerSnapshotPayload = await db.playerSnapshot.create({
-            data: {
-              ...player,
-              player: {
-                connectOrCreate: {
-                  where: {
-                    playFabId: playerData.PlayFabId,
-                  },
-                  create: {
-                    ...player,
-                  },
-                },
-              },
-            },
-          });
+        recordsFetched += leaderboardData.Leaderboard.length;
+        startPosition += leaderboardData.Leaderboard.length;
 
-          console.log(`Created snapshot for ${player.playFabId} (${player.displayName})`);
-          success.createdSnapshots++;
-        }
-
-        const playerUpsert = await db.player.upsert({
-          where: {
-            playFabId: playerData.PlayFabId,
-          },
-          update: {
-            ...player,
-            snapshots: {
-              connectOrCreate: {
-                where: {
-                  id: playerSnapshotPayload.id,
-                },
-                create: {
-                  id: playerSnapshotPayload.id,
-                  ...player,
-                },
-              },
-            },
-          },
-          create: {
-            ...player,
-          },
-        });
-
-        console.log(`Upserted player ${playerUpsert.playFabId} (${playerUpsert.displayName})`);
-        success.upsertedPlayers++;
+        await new Promise((resolve) => setTimeout(resolve, 30000));
       }
-
-      recordsFetched += leaderboardData.Leaderboard.length;
-      startPosition += leaderboardData.Leaderboard.length;
     }
+
+    await getLeaderboardData(StatisticName.OneVsOneRatingZero, 500);
+    await getLeaderboardData(StatisticName.ProfileExperience, 100);
+    await getLeaderboardData(StatisticName.ChirettaExperience, 10);
+    await getLeaderboardData(StatisticName.DreadwyrmExperience, 10);
+    await getLeaderboardData(StatisticName.GunnerExperience, 10);
+    await getLeaderboardData(StatisticName.HarissaExperience, 10);
+    await getLeaderboardData(StatisticName.HazelExperience, 10);
+    await getLeaderboardData(StatisticName.MaypulExperience, 10);
+    await getLeaderboardData(StatisticName.NeeraExperience, 10);
+    await getLeaderboardData(StatisticName.QueenExperience, 10);
+    await getLeaderboardData(StatisticName.RevaExperience, 10);
+    await getLeaderboardData(StatisticName.SaffronExperience, 10);
+    await getLeaderboardData(StatisticName.SelicyExperience, 10);
+    await getLeaderboardData(StatisticName.ShisoExperience, 10);
+    await getLeaderboardData(StatisticName.ShopkeeperExperience, 10);
+    await getLeaderboardData(StatisticName.TerraExperience, 10);
+    await getLeaderboardData(StatisticName.VioletteExperience, 10);
 
     await fetch(getUrl('/api/updated'), {
       method: 'POST',
@@ -231,8 +82,6 @@ export async function updateDB() {
     });
 
     console.timeEnd('updateDB');
-
-    return success;
   } catch (error) {
     await fetch(getUrl('/api/updated'), {
       method: 'POST',

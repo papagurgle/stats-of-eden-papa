@@ -64,7 +64,7 @@ function SortMenu({
         <Menu.Dropdown>
           <Menu.Item onClick={() => handleTabChange('rank')}>Rank</Menu.Item>
           <Menu.Item onClick={() => handleTabChange('name')}>Name</Menu.Item>
-          <Menu.Item onClick={() => handleTabChange('experience')}>Experience</Menu.Item>
+          <Menu.Item onClick={() => handleTabChange('experience')}>Level</Menu.Item>
           <Menu.Item onClick={() => handleTabChange('wins')}>Wins</Menu.Item>
         </Menu.Dropdown>
       </Menu>
@@ -113,7 +113,7 @@ function SortTabs({
             leftSection={<IconNumbers style={iconStyle} />}
             className={cx(styles.tab)}
           >
-            Experience
+            Level
           </Tabs.Tab>
           <Tabs.Tab
             value="wins"

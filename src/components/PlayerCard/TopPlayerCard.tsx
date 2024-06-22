@@ -1,4 +1,4 @@
-import { Anchor, Box, Flex, Group, Image, Stack, Text, Title } from '@mantine/core';
+import { Anchor, Box, Flex, Group, Image, Stack, Text, Title, Tooltip } from '@mantine/core';
 import { type Player } from '@prisma/client';
 import cx from 'classnames';
 import NextImage from 'next/image';
@@ -7,6 +7,7 @@ import Flag from '~/components/Flag/Flag';
 import Tier from '~/components/Tier/Tier';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
+import { getLevel } from '~/game/levels';
 import PlayerCard from './PlayerCard';
 import styles from './PlayerCard.module.scss';
 
@@ -28,11 +29,16 @@ export default function TopPlayerCard({ player }: TopPlayerCardProps) {
 
 function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
   const topCharacter = getTopCharacter(player);
+  const PlayerName = (
+    <Title order={2} className={styles.name}>
+      {player.displayName}
+    </Title>
+  );
 
   return (
     <Group className={cx(styles.card, props.className)}>
       <Box className={styles.bg}>
-        <NextImage src={topCharacter.bg} alt="" width="500" objectFit="cover" />
+        <NextImage src={topCharacter.banner.bg} alt="" width="400" objectFit="cover" />
       </Box>
       <Group className={styles.inner}>
         <Flex
@@ -42,9 +48,8 @@ function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
           justify="center"
           align="center"
           className={cx(styles.rank, styles.first)}
-          fz="xl"
         >
-          #{player.rank}
+          <span className={styles.rankInner}>#{player.rank}</span>
         </Flex>
         <Image
           component={NextImage}
@@ -61,9 +66,7 @@ function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
             lh="xs"
             className={styles.nameLink}
           >
-            <Title order={2} className={styles.name}>
-              {player.displayName}
-            </Title>
+            {player.title ? <Tooltip label={player.title}>{PlayerName}</Tooltip> : PlayerName}
             <Flag city={player.city} country={player.countryCode} size={20} />
           </Anchor>
 
@@ -77,7 +80,10 @@ function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
             </Group>
           </Group>
           <Group gap="xs" className={styles.tierInfo}>
-            <Text size="xs">Experience: {player.experience.toLocaleString()}</Text>
+            <Text size="xs">
+              Lv. {getLevel(player.experience, 'profile')} ({player.experience.toLocaleString()}{' '}
+              experience)
+            </Text>
           </Group>
         </Stack>
       </Group>

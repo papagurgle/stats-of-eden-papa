@@ -19,7 +19,7 @@ export default function PlayerList({ players }: PlayerListProps) {
             <Table.Th>Player</Table.Th>
             <Table.Th className={styles.desktopOnly}>Tier</Table.Th>
             <Table.Th>Rating</Table.Th>
-            <Table.Th className={styles.desktopOnly}>Experience</Table.Th>
+            <Table.Th className={styles.desktopOnly}>Level</Table.Th>
             <Table.Th>Winrate</Table.Th>
           </Table.Tr>
         </Table.Thead>
