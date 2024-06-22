@@ -28,13 +28,19 @@ export default function CharacterCard({ players, character }: TopCharacterPlayer
         <Table className={stylesPlayerList.table} striped highlightOnHover>
           <Table.Thead>
             <Table.Tr>
+              <Table.Th className={styles.rank}></Table.Th>
               <Table.Th>Level</Table.Th>
               <Table.Th>Player</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {players.map((player) => (
-              <CharacterCardRow key={player.playFabId} player={player} character={character} />
+            {players.map((player, i) => (
+              <CharacterCardRow
+                key={player.playFabId}
+                player={player}
+                character={character}
+                rank={i + 1}
+              />
             ))}
           </Table.Tbody>
         </Table>
@@ -43,7 +49,15 @@ export default function CharacterCard({ players, character }: TopCharacterPlayer
   );
 }
 
-function CharacterCardRow({ player, character }: { player: Player; character: Character }) {
+function CharacterCardRow({
+  player,
+  character,
+  rank,
+}: {
+  player: Player;
+  character: Character;
+  rank: number;
+}) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const PlayerName = (
     <Anchor
@@ -70,6 +84,7 @@ function CharacterCardRow({ player, character }: { player: Player; character: Ch
 
   return (
     <Table.Tr key={player.playFabId} className={stylesPlayerList.row} onClick={handleRowClick}>
+      <Table.Td className={styles.rank}>{rank}</Table.Td>
       <Table.Td>
         <Tooltip label={`${characterExp?.toLocaleString()} character exp`}>
           <Text size="sm">Lv. {characterLvl}</Text>
