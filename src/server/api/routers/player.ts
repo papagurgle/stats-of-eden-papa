@@ -73,7 +73,7 @@ export const playerRouter = createTRPCRouter({
         limit: z.number(),
         cursor: z.string().nullish(),
         skip: z.number().optional(),
-        sort: z.enum(['rank', 'name', 'experience', 'wins']) satisfies z.ZodType<PlayerListSortBy>,
+        sort: z.enum(['rank', 'experience', 'wins']) satisfies z.ZodType<PlayerListSortBy>,
       })
     )
     .query(async ({ input, ctx }) => {
@@ -89,7 +89,6 @@ export const playerRouter = createTRPCRouter({
           : undefined,
         orderBy: [
           { rank: sort ? (sort === 'rank' ? 'asc' : undefined) : 'asc' },
-          { displayName: sort === 'name' ? 'asc' : undefined },
           { experience: sort === 'experience' ? 'desc' : undefined },
           { rankedWins: sort === 'wins' ? 'desc' : undefined },
           { updatedAt: 'desc' }, // Secondary sort by update time descending

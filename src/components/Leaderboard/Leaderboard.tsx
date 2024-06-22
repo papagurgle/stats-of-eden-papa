@@ -1,5 +1,5 @@
 import { Button, Grid, Menu, Space, Tabs, Text, rem } from '@mantine/core';
-import { IconAbc, IconActivity, IconAward, IconNumbers } from '@tabler/icons-react';
+import { IconActivity, IconAward, IconNumbers } from '@tabler/icons-react';
 import cx from 'classnames';
 import PlayerCard from '~/components/PlayerCard/PlayerCard';
 import TopPlayerCard from '~/components/PlayerCard/TopPlayerCard';
@@ -63,7 +63,6 @@ function SortMenu({
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Item onClick={() => handleTabChange('rank')}>Rank</Menu.Item>
-          <Menu.Item onClick={() => handleTabChange('name')}>Name</Menu.Item>
           <Menu.Item onClick={() => handleTabChange('experience')}>Level</Menu.Item>
           <Menu.Item onClick={() => handleTabChange('wins')}>Wins</Menu.Item>
         </Menu.Dropdown>
@@ -100,13 +99,6 @@ function SortTabs({
             className={cx(styles.tab)}
           >
             Rank
-          </Tabs.Tab>
-          <Tabs.Tab
-            value="name"
-            leftSection={<IconAbc style={iconStyle} />}
-            className={cx(styles.tab)}
-          >
-            Name
           </Tabs.Tab>
           <Tabs.Tab
             value="experience"
