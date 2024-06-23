@@ -39,7 +39,7 @@ export default function Search() {
     const player = headerSearchQuery.data?.find((p) => p.displayName === currentSearchTerm);
 
     if (player) {
-      await router.push(`/player/${player.playFabId}`);
+      await router.push(`/player/${player.playFabId}/${player.displayName}`);
 
       // Clear search term and unfocus
       searchSearchTerm('');

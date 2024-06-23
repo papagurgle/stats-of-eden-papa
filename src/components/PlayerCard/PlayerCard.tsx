@@ -45,7 +45,7 @@ export default function PlayerCard({ player, ...props }: PlayerCardProps) {
           alt={topCharacter.name}
         />
         <Anchor
-          href={`/player/${player.playFabId}`}
+          href={`/player/${player.playFabId}/${player.displayName}`}
           component={Link}
           fz={{
             base: 'md',

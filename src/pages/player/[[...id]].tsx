@@ -42,7 +42,7 @@ export default function PlayerPage({
 }
 
 export const getServerSideProps = (async (context) => {
-  const id = context.params?.id as string;
+  const id = context.params?.id?.[0] as unknown as string;
   const player = await db.player.findUnique({
     where: {
       playFabId: id,

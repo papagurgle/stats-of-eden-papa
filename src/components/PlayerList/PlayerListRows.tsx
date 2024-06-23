@@ -28,7 +28,7 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
     <Anchor
       fw="bold"
       size="sm"
-      href={`/player/${player.playFabId}`}
+      href={`/player/${player.playFabId}/${player.displayName}`}
       component={Link}
       className={styles.name}
       ref={linkRef}

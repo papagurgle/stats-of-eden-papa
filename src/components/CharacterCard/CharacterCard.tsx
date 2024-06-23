@@ -62,7 +62,7 @@ function CharacterCardRow({
   const PlayerName = (
     <Anchor
       size="sm"
-      href={`/player/${player.playFabId}`}
+      href={`/player/${player.playFabId}/${player.displayName}`}
       component={Link}
       ref={linkRef}
       className={styles.name}

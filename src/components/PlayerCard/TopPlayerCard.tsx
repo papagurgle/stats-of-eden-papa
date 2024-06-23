@@ -61,7 +61,7 @@ function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
         />
         <Stack gap="xs">
           <Anchor
-            href={`/player/${player.playFabId}`}
+            href={`/player/${player.playFabId}/${player.displayName}`}
             component={Link}
             lh="xs"
             className={styles.nameLink}
