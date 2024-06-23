@@ -1,6 +1,7 @@
 import { SimpleGrid } from '@mantine/core';
 import { type Prisma } from '@prisma/client';
 import { type GetServerSideProps, type InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import CharacterCard from '~/components/CharacterCard/CharacterCard';
 import {
   Chiretta,
@@ -26,23 +27,32 @@ export default function CharactersPage({
   top,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <SimpleGrid
-      cols={{
-        base: 1,
-        sm: 2,
-        md: 3,
-      }}
-    >
-      {top.map((char) => {
-        return (
-          <CharacterCard
-            key={char.character.name}
-            players={char.players}
-            character={char.character}
-          />
-        );
-      })}
-    </SimpleGrid>
+    <>
+      <Head>
+        <title>{`Characters | Stats of Eden`}</title>
+        <meta
+          name="description"
+          content={`Top players for each character in the Duelists of Eden game`}
+        />
+      </Head>
+      <SimpleGrid
+        cols={{
+          base: 1,
+          sm: 2,
+          md: 3,
+        }}
+      >
+        {top.map((char) => {
+          return (
+            <CharacterCard
+              key={char.character.name}
+              players={char.players}
+              character={char.character}
+            />
+          );
+        })}
+      </SimpleGrid>
+    </>
   );
 }
 

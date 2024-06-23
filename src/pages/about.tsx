@@ -35,15 +35,19 @@ export default function AboutPage() {
             <Title order={2} size="h1">
               About
             </Title>
-            <p>This site is a work in progress. Stats are refreshed hourly.</p>
-            <p>So far I have plans to add:</p>
+            <p>
+              This site is a work in progress. Stats are refreshed hourly. Currently this is
+              fetched:
+            </p>
+            <ul>
+              <li>Top 500 ranked players</li>
+              <li>Top 100 experienced players</li>
+              <li>Top 10 players for each character</li>
+            </ul>
+            <p>I have plans to add:</p>
             <ul>
               <li>More than top 500. Currently I don&#39;t think I can host more on a free plan</li>
-              <li>Character pages</li>
               <li>Country pages</li>
-              <li>Title/Profile Banners</li>
-              <li>Past display names</li>
-              <li>Fix name sort to be case insensitive</li>
               <li>
                 Global stats (top exp, top played characters, matches played, aggregated stats, etc)
               </li>

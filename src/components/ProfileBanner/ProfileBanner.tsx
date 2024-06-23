@@ -20,7 +20,6 @@ export interface ProfileBannerProps {
 
 export default function ProfileBanner({ player, rankInExperience }: ProfileBannerProps) {
   const character = getTopCharacter(player);
-  console.log(player);
   const background = getBanner(player.banner);
   const previousNames = [
     ...new Set(player.snapshots.map((snapshot) => snapshot.displayName)),
