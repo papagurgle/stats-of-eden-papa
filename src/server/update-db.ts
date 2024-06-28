@@ -5,7 +5,6 @@ import {
 } from '~/constants';
 import { env } from '~/env';
 import { fetchLeaderboard, loginWithCustomId } from '~/playfab/client';
-import { db } from '~/server/db';
 import { insertPlayers } from '~/server/insert-players';
 import { StatisticName } from '~/types/Characters';
 import getUrl from '~/utils/getUrl';
@@ -61,29 +60,6 @@ export async function updateDB() {
     }
 
     await getLeaderboardData(StatisticName.OneVsOneRatingZero, RANKED_FETCH_AMOUNT);
-
-    await db.player.updateMany({
-      where: {
-        playFabId: {
-          notIn: foundPlayfabIds,
-        },
-      },
-      data: {
-        rank: null,
-      },
-    });
-
-    await db.playerSnapshot.updateMany({
-      where: {
-        playFabId: {
-          notIn: foundPlayfabIds,
-        },
-      },
-      data: {
-        rank: null,
-      },
-    });
-
     await getLeaderboardData(StatisticName.ProfileExperience, PROFILE_EXP_FETCH_AMOUNT);
     await getLeaderboardData(StatisticName.ChirettaExperience, CHARACTER_EXP_FETCH_AMOUNT);
     await getLeaderboardData(StatisticName.DreadwyrmExperience, CHARACTER_EXP_FETCH_AMOUNT);
