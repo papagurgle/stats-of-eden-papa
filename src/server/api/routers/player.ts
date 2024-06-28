@@ -93,7 +93,7 @@ export const playerRouter = createTRPCRouter({
           { rankedWins: sort === 'wins' ? 'desc' : undefined },
           { updatedAt: 'desc' }, // Secondary sort by update time descending
         ],
-        distinct: ['rank'], // Ensure each rank is represented only once
+        distinct: sort === 'rank' ? ['rank'] : undefined, // Ensure each rank is represented only once
         include: {
           snapshots: {
             orderBy: {

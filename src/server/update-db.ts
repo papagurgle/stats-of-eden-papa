@@ -1,5 +1,11 @@
+import {
+  CHARACTER_EXP_FETCH_AMOUNT,
+  PROFILE_EXP_FETCH_AMOUNT,
+  RANKED_FETCH_AMOUNT,
+} from '~/constants';
 import { env } from '~/env';
 import { fetchLeaderboard, loginWithCustomId } from '~/playfab/client';
+import { db } from '~/server/db';
 import { insertPlayers } from '~/server/insert-players';
 import { StatisticName } from '~/types/Characters';
 import getUrl from '~/utils/getUrl';
@@ -54,23 +60,46 @@ export async function updateDB() {
       }
     }
 
-    await getLeaderboardData(StatisticName.OneVsOneRatingZero, 500);
-    await getLeaderboardData(StatisticName.ProfileExperience, 100);
-    await getLeaderboardData(StatisticName.ChirettaExperience, 10);
-    await getLeaderboardData(StatisticName.DreadwyrmExperience, 10);
-    await getLeaderboardData(StatisticName.GunnerExperience, 10);
-    await getLeaderboardData(StatisticName.HarissaExperience, 10);
-    await getLeaderboardData(StatisticName.HazelExperience, 10);
-    await getLeaderboardData(StatisticName.MaypulExperience, 10);
-    await getLeaderboardData(StatisticName.NeeraExperience, 10);
-    await getLeaderboardData(StatisticName.QueenExperience, 10);
-    await getLeaderboardData(StatisticName.RevaExperience, 10);
-    await getLeaderboardData(StatisticName.SaffronExperience, 10);
-    await getLeaderboardData(StatisticName.SelicyExperience, 10);
-    await getLeaderboardData(StatisticName.ShisoExperience, 10);
-    await getLeaderboardData(StatisticName.ShopkeeperExperience, 10);
-    await getLeaderboardData(StatisticName.TerraExperience, 10);
-    await getLeaderboardData(StatisticName.VioletteExperience, 10);
+    await getLeaderboardData(StatisticName.OneVsOneRatingZero, RANKED_FETCH_AMOUNT);
+
+    await db.player.updateMany({
+      where: {
+        playFabId: {
+          notIn: foundPlayfabIds,
+        },
+      },
+      data: {
+        rank: null,
+      },
+    });
+
+    await db.playerSnapshot.updateMany({
+      where: {
+        playFabId: {
+          notIn: foundPlayfabIds,
+        },
+      },
+      data: {
+        rank: null,
+      },
+    });
+
+    await getLeaderboardData(StatisticName.ProfileExperience, PROFILE_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.ChirettaExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.DreadwyrmExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.GunnerExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.HarissaExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.HazelExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.MaypulExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.NeeraExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.QueenExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.RevaExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.SaffronExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.SelicyExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.ShisoExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.ShopkeeperExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.TerraExperience, CHARACTER_EXP_FETCH_AMOUNT);
+    await getLeaderboardData(StatisticName.VioletteExperience, CHARACTER_EXP_FETCH_AMOUNT);
 
     await fetch(getUrl('/api/updated'), {
       method: 'POST',

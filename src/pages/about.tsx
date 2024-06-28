@@ -1,6 +1,7 @@
 import { DEFAULT_THEME, Grid, List, Space, Text, Title } from '@mantine/core';
 import Head from 'next/head';
 import Link from 'next/link';
+import { CHARACTER_EXP_FETCH_AMOUNT, PROFILE_EXP_FETCH_AMOUNT } from '~/constants';
 import { theme } from '~/theme';
 
 export default function AboutPage() {
@@ -40,13 +41,13 @@ export default function AboutPage() {
               fetched:
             </p>
             <ul>
-              <li>Top 500 ranked players</li>
-              <li>Top 100 experienced players</li>
-              <li>Top 10 players for each character</li>
+              <li>Top {CHARACTER_EXP_FETCH_AMOUNT} ranked players</li>
+              <li>Top {PROFILE_EXP_FETCH_AMOUNT} experienced players</li>
+              <li>Top {CHARACTER_EXP_FETCH_AMOUNT} players for each character</li>
             </ul>
             <p>I have plans to add:</p>
             <ul>
-              <li>More than top 500. Currently I don&#39;t think I can host more on a free plan</li>
+              <li>More than top {CHARACTER_EXP_FETCH_AMOUNT}</li>
               <li>Country pages</li>
               <li>
                 Global stats (top exp, top played characters, matches played, aggregated stats, etc)

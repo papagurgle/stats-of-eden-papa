@@ -1,6 +1,6 @@
 import { type PlayerSnapshot, type Prisma } from '@prisma/client';
 import { type z } from 'zod';
-import { fetchLeaderboardAroundPlayer, fetchUserData } from '~/playfab/client';
+import { fetchUserData } from '~/playfab/client';
 import { LocationSchema, type LeaderboardEntrySchema } from '~/playfab/schema';
 import { db } from '~/server/db';
 import { CharacterStats, StatisticName } from '~/types/Characters';
@@ -14,7 +14,7 @@ export async function insertPlayers(
   const foundPlayfabIds: string[] = [];
   let index = position;
 
-  for (let playerData of players) {
+  for (const playerData of players) {
     index++;
 
     if (insertedPlayers.includes(playerData.PlayFabId)) {
@@ -35,18 +35,6 @@ export async function insertPlayers(
     const userData = await fetchUserData({ PlayFabId: playerData.PlayFabId });
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Need to fetch the leaderboard since we can get their rank
-    if (statisticName !== StatisticName.OneVsOneRatingZero) {
-      const result = await fetchLeaderboardAroundPlayer({
-        PlayFabId: playerData.PlayFabId,
-        MaxResultsCount: 1,
-        StatisticName: StatisticName.OneVsOneRatingZero,
-      });
-
-      playerData = result.Leaderboard[0] ?? playerData;
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-
     const player = {
       playFabId: playerData.PlayFabId,
       title: userData.Data?.SelectedTitle?.Value,
@@ -56,7 +44,12 @@ export async function insertPlayers(
         playerData.Profile.Statistics.find(
           (statistic) => statistic.Name === StatisticName.ProfileExperience.toString()
         )?.Value ?? 0,
-      rank: playerData.Position !== undefined ? playerData.Position + 1 : null,
+      rank:
+        statisticName === StatisticName.OneVsOneRatingZero
+          ? playerData.Position !== undefined
+            ? playerData.Position + 1
+            : null
+          : null,
       rating: playerData.Profile.Statistics.find(
         (statistic) => statistic.Name === StatisticName.OneVsOneRatingZero.toString()
       )?.Value,

@@ -70,7 +70,6 @@
     "pretty-quick": "^4.0.0",
     "prisma": "^5.12.1",
     "recharts": "^2.12.4",
-    "supabase": "^1.167.4",
     "tsx": "^4.7.2",
     "typescript": "^5.4.2"
   },
