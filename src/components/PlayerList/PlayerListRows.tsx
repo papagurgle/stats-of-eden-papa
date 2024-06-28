@@ -5,7 +5,6 @@ import { useRef } from 'react';
 import Flag from '~/components/Flag/Flag';
 import RankChange from '~/components/RankChange/RankChange';
 import Winrate from '~/components/Winrate/Winrate';
-import { RANKED_FETCH_AMOUNT } from '~/constants';
 import { getTopCharacter } from '~/game/characters';
 import { getLevel } from '~/game/levels';
 import { getTier } from '~/game/tiers';
@@ -48,77 +47,56 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
   }
 
   return (
-    <>
-      <Table.Tr key={player.playFabId} onClick={handleRowClick} className={styles.row}>
-        <Table.Td>
-          {player.rank && (
-            <RankChange
-              rank={player.rank}
-              previousRank={player.snapshots[0]?.rank ?? player.rank}
-              change={getRankChange(player)}
-            />
-          )}
-        </Table.Td>
-        <Table.Td>
-          <div className={styles.player}>
-            <Image
-              component={NextImage}
-              w={25}
-              h={25}
-              radius="xs"
-              src={topCharacter.icon}
-              alt={topCharacter.name}
-              className={styles.character}
-            />
-            {player.title ? <Tooltip label={player.title}>{PlayerName}</Tooltip> : PlayerName}{' '}
-            <Flag city={player.city} country={player.countryCode} size={15} />
-          </div>
-        </Table.Td>
-        <Table.Td className={styles.desktopOnly}>
-          <div className={styles.tier}>
-            <Image
-              component={NextImage}
-              w={15}
-              h={15}
-              radius="xs"
-              src={tier.image}
-              alt={tier.name}
-            />
-            {tier.name}
-          </div>
-        </Table.Td>
-        <Table.Td>{player.rating}</Table.Td>
-        <Table.Td className={styles.desktopOnly}>
-          <Tooltip label={`${player.experience.toLocaleString()} experience`}>
-            <span>Lv. {getLevel(player.experience, 'profile')}</span>
-          </Tooltip>
-        </Table.Td>
-        <Table.Td>
-          <Group gap="xs" className={styles.wins}>
-            <Winrate
-              wins={player.rankedWins}
-              losses={player.rankedLosses}
-              className={styles.winrate}
-            />
-            <Text size="xs">
-              {Math.round(
-                (player.rankedWins / (player.rankedWins + player.rankedLosses) || 0) * 100
-              )}
-              %
-            </Text>
-          </Group>
-        </Table.Td>
-      </Table.Tr>
-      {player.rank === RANKED_FETCH_AMOUNT && (
-        <Table.Tr>
-          <Table.Td colSpan={6} className={styles.ad}>
-            <Text ta="center" py="xl">
-              Players beyond this point were added because they are on a leaderboard for experience
-              levels
-            </Text>
-          </Table.Td>
-        </Table.Tr>
-      )}
-    </>
+    <Table.Tr key={player.playFabId} onClick={handleRowClick} className={styles.row}>
+      <Table.Td>
+        {player.rank && (
+          <RankChange
+            rank={player.rank}
+            previousRank={player.snapshots[0]?.rank ?? player.rank}
+            change={getRankChange(player)}
+          />
+        )}
+      </Table.Td>
+      <Table.Td>
+        <div className={styles.player}>
+          <Image
+            component={NextImage}
+            w={25}
+            h={25}
+            radius="xs"
+            src={topCharacter.icon}
+            alt={topCharacter.name}
+            className={styles.character}
+          />
+          {player.title ? <Tooltip label={player.title}>{PlayerName}</Tooltip> : PlayerName}{' '}
+          <Flag city={player.city} country={player.countryCode} size={15} />
+        </div>
+      </Table.Td>
+      <Table.Td className={styles.desktopOnly}>
+        <div className={styles.tier}>
+          <Image component={NextImage} w={15} h={15} radius="xs" src={tier.image} alt={tier.name} />
+          {tier.name}
+        </div>
+      </Table.Td>
+      <Table.Td>{player.rating}</Table.Td>
+      <Table.Td className={styles.desktopOnly}>
+        <Tooltip label={`${player.experience.toLocaleString()} experience`}>
+          <span>Lv. {getLevel(player.experience, 'profile')}</span>
+        </Tooltip>
+      </Table.Td>
+      <Table.Td>
+        <Group gap="xs" className={styles.wins}>
+          <Winrate
+            wins={player.rankedWins}
+            losses={player.rankedLosses}
+            className={styles.winrate}
+          />
+          <Text size="xs">
+            {Math.round((player.rankedWins / (player.rankedWins + player.rankedLosses) || 0) * 100)}
+            %
+          </Text>
+        </Group>
+      </Table.Td>
+    </Table.Tr>
   );
 }
