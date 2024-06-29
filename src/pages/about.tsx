@@ -1,7 +1,11 @@
 import { DEFAULT_THEME, Grid, List, Space, Text, Title } from '@mantine/core';
 import Head from 'next/head';
 import Link from 'next/link';
-import { CHARACTER_EXP_FETCH_AMOUNT, PROFILE_EXP_FETCH_AMOUNT } from '~/constants';
+import {
+  CHARACTER_EXP_FETCH_AMOUNT,
+  PROFILE_EXP_FETCH_AMOUNT,
+  RANKED_FETCH_AMOUNT,
+} from '~/constants';
 import { theme } from '~/theme';
 
 export default function AboutPage() {
@@ -41,13 +45,13 @@ export default function AboutPage() {
               fetched:
             </p>
             <ul>
-              <li>Top {CHARACTER_EXP_FETCH_AMOUNT} ranked players</li>
+              <li>Top {RANKED_FETCH_AMOUNT} ranked players</li>
               <li>Top {PROFILE_EXP_FETCH_AMOUNT} experienced players</li>
               <li>Top {CHARACTER_EXP_FETCH_AMOUNT} players for each character</li>
             </ul>
             <p>I have plans to add:</p>
             <ul>
-              <li>More than top {CHARACTER_EXP_FETCH_AMOUNT}</li>
+              <li>More than top {RANKED_FETCH_AMOUNT}</li>
               <li>Country pages</li>
               <li>
                 Global stats (top exp, top played characters, matches played, aggregated stats, etc)
@@ -71,40 +75,38 @@ export default function AboutPage() {
                 Changelog
               </Title>
               <Space h="xs" />
-              <Text fw="bold" size="sm">
-                June 22nd, 2024
-              </Text>
-              <Space h="xs" />
-              <List size="xs">
-                <List.Item>
-                  Add <Link href="/characters">characters</Link> page
-                </List.Item>
-                <List.Item>
-                  Add player titles & banners (If you don&apos;t see it, try reapplying it ingame)
-                </List.Item>
-                <List.Item>Add previously known names</List.Item>
-              </List>
-              <Space h="xs" />
-              <Text fw="bold" size="sm">
-                June 7th, 2024
-              </Text>
-              <Space h="xs" />
-              <List size="xs">
-                <List.Item>Increased players fetched from 250 to 500</List.Item>
-                <List.Item>Added player sort</List.Item>
-                <List.Item>Added &quot;load more&quot; button</List.Item>
-                <List.Item>Updated &quot;last updated&quot; logic</List.Item>
-              </List>
-              <Space h="md" />
-              <Text fw="bold" size="sm">
-                May 19th, 2024
-              </Text>
-              <Space h="xs" />
-              <List size="xs">
-                <List.Item>Added table sort to homepage</List.Item>
-                <List.Item>Added ranked history chart</List.Item>
-                <List.Item>Add rank change indicator</List.Item>
-              </List>
+              <ChangelogItem date="June 28th, 2024">
+                <List size="xs">
+                  <List.Item>Fixed incorrect rank data</List.Item>
+                  <List.Item>Updated scraper to get top 750</List.Item>
+                </List>
+              </ChangelogItem>
+              <ChangelogItem date="June 22nd, 2024">
+                <List size="xs">
+                  <List.Item>
+                    Add <Link href="/characters">characters</Link> page
+                  </List.Item>
+                  <List.Item>
+                    Add player titles & banners (If you don&apos;t see it, try reapplying it ingame)
+                  </List.Item>
+                  <List.Item>Add previously known names</List.Item>
+                </List>
+              </ChangelogItem>
+              <ChangelogItem date="June 7th, 2024">
+                <List size="xs">
+                  <List.Item>Increased players fetched from 250 to 500</List.Item>
+                  <List.Item>Added player sort</List.Item>
+                  <List.Item>Added &quot;load more&quot; button</List.Item>
+                  <List.Item>Updated &quot;last updated&quot; logic</List.Item>
+                </List>
+              </ChangelogItem>
+              <ChangelogItem date="May 19th, 2024">
+                <List size="xs">
+                  <List.Item>Added table sort to homepage</List.Item>
+                  <List.Item>Added ranked history chart</List.Item>
+                  <List.Item>Add rank change indicator</List.Item>
+                </List>
+              </ChangelogItem>
             </div>
           </Grid.Col>
         </Grid>
@@ -112,3 +114,14 @@ export default function AboutPage() {
     </>
   );
 }
+
+const ChangelogItem = ({ date, children }: { date: string; children: React.ReactNode }) => (
+  <>
+    <Text fw="bold" size="sm">
+      {date}
+    </Text>
+    <Space h="xs" />
+    <div>{children}</div>
+    <Space h="xs" />
+  </>
+);

@@ -55,7 +55,7 @@ export async function updateDB() {
         recordsFetched += leaderboardData.Leaderboard.length;
         startPosition += leaderboardData.Leaderboard.length;
 
-        await new Promise((resolve) => setTimeout(resolve, 30000));
+        await new Promise((resolve) => setTimeout(resolve, 15000));
       }
     }
 
