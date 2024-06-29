@@ -13,8 +13,6 @@ await import('./src/env.js');
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    loader: 'custom',
-    loaderFile: './src/utils/image-loader.js',
     remotePatterns: [
       {
         protocol: 'https',
