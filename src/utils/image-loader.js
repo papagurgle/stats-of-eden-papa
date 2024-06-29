@@ -9,9 +9,9 @@ export default function myImageLoader({ src, width, quality }) {
   const isLocal = !src.startsWith('http');
   const query = new URLSearchParams();
 
-  const imageOptimizationApi = 'transformation-rok4kk8.statsofeden.com';
+  const imageOptimizationApi = 'https://transformation-rok4kk8.statsofeden.com';
   // Your NextJS application URL
-  const baseUrl = 'statsofeden.com';
+  const baseUrl = 'https://statsofeden.com';
 
   const fullSrc = `${baseUrl}${src}`;
 
