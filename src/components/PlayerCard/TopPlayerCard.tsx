@@ -49,7 +49,7 @@ function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
           align="center"
           className={cx(styles.rank, styles.first)}
         >
-          {player.rank && <span className={styles.rankInner}>#{player.rank}</span>}
+          <span className={styles.rankInner}>{player.rank ? `#${player.rank}` : 'N/A'}</span>
         </Flex>
         <Image
           component={NextImage}

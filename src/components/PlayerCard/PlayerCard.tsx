@@ -34,7 +34,7 @@ export default function PlayerCard({ player, ...props }: PlayerCardProps) {
             player.rank === 3 && styles.third
           )}
         >
-          {player.rank && <span className={styles.rankInner}>#{player.rank}</span>}
+          <span className={styles.rankInner}>{player.rank ? `#${player.rank}` : 'N/A'}</span>
         </Flex>
         <Image
           component={NextImage}
