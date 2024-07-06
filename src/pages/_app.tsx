@@ -22,7 +22,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       <Script
         defer
-        src="https://umami-lg0ogkc.statsofeden.com/script.js"
+        src="https://umami.statsofeden.com/script.js"
         data-website-id="f483386f-0d5c-4fbe-92da-2aafa77334cb"
       />
       <Header />
