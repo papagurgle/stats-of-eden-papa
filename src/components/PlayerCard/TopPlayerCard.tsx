@@ -8,6 +8,7 @@ import Tier from '~/components/Tier/Tier';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
 import { getLevel } from '~/game/levels';
+import { getPeakRating } from '~/utils/peakRating';
 import PlayerCard from './PlayerCard';
 import styles from './PlayerCard.module.scss';
 
@@ -79,11 +80,19 @@ function TopPlayerCardDesktop({ player, ...props }: TopPlayerCardProps) {
               </Text>
             </Group>
           </Group>
-          <Group gap="xs" className={styles.tierInfo}>
-            <Text size="xs">
-              Lv. {getLevel(player.experience, 'profile')} ({player.experience.toLocaleString()}{' '}
-              experience)
-            </Text>
+          <Group grow>
+            {(player.rank ?? player.rankedPeakRating) && (
+              <Tooltip label="Season Peak Rating">
+                <Group gap="xs" className={styles.tierInfo}>
+                  <Text size="xs">Peak Rating: {getPeakRating(player)} </Text>
+                </Group>
+              </Tooltip>
+            )}
+            <Tooltip label={`${player.experience.toLocaleString()} experience`}>
+              <Group gap="xs" className={styles.tierInfo}>
+                <Text size="xs">Level: {getLevel(player.experience, 'profile')}</Text>
+              </Group>
+            </Tooltip>
           </Group>
         </Stack>
       </Group>

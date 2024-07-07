@@ -10,6 +10,7 @@ import { getTopCharacter } from '~/game/characters';
 import { getLevel } from '~/game/levels';
 import { type PlayerInfo } from '~/types/Player';
 import { getBanner } from '~/utils/banner';
+import { getPeakRating } from '~/utils/peakRating';
 import { getRankChange } from '~/utils/rankChange';
 import styles from './profile-banner.module.scss';
 
@@ -111,7 +112,7 @@ export default function ProfileBanner({ player, rankInExperience }: ProfileBanne
                 PEAK RATING
               </Text>
               <Text size="xs" ta={{ sm: 'right' }}>
-                {player.rankedPeakRating < player.rating ? player.rating : player.rankedPeakRating}
+                {getPeakRating(player)}
               </Text>
             </Stack>
           )}

@@ -1,6 +1,7 @@
 import { type PlayerInfo } from '~/types/Player';
+import { getPeakRating } from '~/utils/peakRating';
 
-export type PlayerListSortBy = 'rank' | 'experience' | 'wins';
+export type PlayerListSortBy = 'rank' | 'experience' | 'wins' | 'peak';
 
 export function sortData(data: PlayerInfo[], payload: { sortBy: PlayerListSortBy }): PlayerInfo[] {
   const { sortBy } = payload;
@@ -14,6 +15,9 @@ export function sortData(data: PlayerInfo[], payload: { sortBy: PlayerListSortBy
     } else if (sortBy === 'experience') {
       tempA = a.experience;
       tempB = b.experience;
+    } else if (sortBy === 'peak') {
+      tempA = getPeakRating(a);
+      tempB = getPeakRating(b);
     }
 
     if (typeof tempA === 'number' && typeof tempB === 'number') {

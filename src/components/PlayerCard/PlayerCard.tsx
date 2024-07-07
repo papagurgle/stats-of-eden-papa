@@ -8,6 +8,7 @@ import Tier from '~/components/Tier/Tier';
 import Winrate from '~/components/Winrate/Winrate';
 import { getTopCharacter } from '~/game/characters';
 import { getLevel } from '~/game/levels';
+import { getPeakRating } from '~/utils/peakRating';
 import styles from './PlayerCard.module.scss';
 
 export interface PlayerCardProps extends React.ComponentProps<typeof Stack> {
@@ -63,11 +64,19 @@ export default function PlayerCard({ player, ...props }: PlayerCardProps) {
         <Group gap="xs" className={styles.tierInfo}>
           <Tier rating={player.rating ?? 0} size="small" />
         </Group>
-        <Group gap="xs" className={styles.tierInfo}>
-          <Text size="xs">
-            Lv. {getLevel(player.experience, 'profile')} ({player.experience.toLocaleString()}{' '}
-            experience)
-          </Text>
+        <Group gap="xs" grow>
+          {(player.rank ?? player.rankedPeakRating) && (
+            <Tooltip label="Season Peak Rating">
+              <Group gap="xs" className={styles.tierInfo}>
+                <Text size="xs">Peak: {getPeakRating(player)} </Text>
+              </Group>
+            </Tooltip>
+          )}
+          <Tooltip label={`${player.experience.toLocaleString()} experience`}>
+            <Group gap="xs" className={styles.tierInfo}>
+              <Text size="xs">Level: {getLevel(player.experience, 'profile')}</Text>
+            </Group>
+          </Tooltip>
         </Group>
         <Group gap="xs" className={styles.wins}>
           <Winrate wins={player.rankedWins} losses={player.rankedLosses} />

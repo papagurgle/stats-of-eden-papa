@@ -1,3 +1,4 @@
+import { type Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 import { type PlayerInfo } from '~/types/Player';
@@ -73,19 +74,42 @@ export const playerRouter = createTRPCRouter({
         limit: z.number(),
         cursor: z.string().nullish(),
         skip: z.number().optional(),
-        sort: z.enum(['rank', 'experience', 'wins']) satisfies z.ZodType<PlayerListSortBy>,
+        sort: z.enum(['rank', 'experience', 'wins', 'peak']) satisfies z.ZodType<PlayerListSortBy>,
       })
     )
     .query(async ({ input, ctx }) => {
       const { limit, cursor, skip, sort } = input;
+      let orderBy: Prisma.PlayerOrderByWithRelationInput[] = [
+        {
+          updatedAt: 'desc',
+        },
+      ];
+
+      switch (sort) {
+        case 'rank':
+          orderBy = [{ rank: 'asc' }, ...orderBy];
+          break;
+        case 'experience':
+          orderBy = [{ experience: 'desc' }, ...orderBy];
+          break;
+        case 'wins':
+          orderBy = [{ rankedWins: 'desc' }, ...orderBy];
+          break;
+        case 'peak':
+          orderBy = [{ rankedPeakRating: 'desc' }, ...orderBy];
+          break;
+      }
 
       const items = (await ctx.db.player.findMany({
         skip: skip,
         take: limit + 1,
         where:
-          sort === 'rank'
+          sort === 'rank' || sort === 'peak'
             ? {
                 rank: {
+                  not: null,
+                },
+                rankedPeakRating: {
                   not: null,
                 },
               }
@@ -95,12 +119,7 @@ export const playerRouter = createTRPCRouter({
               playFabId: cursor,
             }
           : undefined,
-        orderBy: [
-          { rank: sort ? (sort === 'rank' ? 'asc' : undefined) : 'asc' },
-          { experience: sort === 'experience' ? 'desc' : undefined },
-          { rankedWins: sort === 'wins' ? 'desc' : undefined },
-          { updatedAt: 'desc' }, // Secondary sort by update time descending
-        ],
+        orderBy,
         distinct: sort === 'rank' ? ['rank'] : undefined, // Ensure each rank is represented only once
         include: {
           snapshots: {

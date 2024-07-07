@@ -75,6 +75,11 @@ export default function AboutPage() {
                 Changelog
               </Title>
               <Space h="xs" />
+              <ChangelogItem date="July 6th, 2024">
+                <List size="xs">
+                  <List.Item>Added &quot;Peak Rating&quot; sort</List.Item>
+                </List>
+              </ChangelogItem>
               <ChangelogItem date="June 28th, 2024">
                 <List size="xs">
                   <List.Item>Fixed incorrect rank data</List.Item>

@@ -9,6 +9,7 @@ import { getTopCharacter } from '~/game/characters';
 import { getLevel } from '~/game/levels';
 import { getTier } from '~/game/tiers';
 import { type PlayerInfo } from '~/types/Player';
+import { getPeakRating } from '~/utils/peakRating';
 import { getRankChange } from '~/utils/rankChange';
 import styles from './player-list.module.scss';
 
@@ -79,6 +80,7 @@ function PlayerListRow({ player }: { player: PlayerInfo }) {
         </div>
       </Table.Td>
       <Table.Td>{player.rating}</Table.Td>
+      <Table.Td className={styles.desktopOnly}>{getPeakRating(player)}</Table.Td>
       <Table.Td className={styles.desktopOnly}>
         <Tooltip label={`${player.experience.toLocaleString()} experience`}>
           <span>Lv. {getLevel(player.experience, 'profile')}</span>

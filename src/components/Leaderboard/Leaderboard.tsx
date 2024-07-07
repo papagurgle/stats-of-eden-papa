@@ -1,11 +1,11 @@
 import { Button, Grid, Menu, Space, Tabs, Text, rem } from '@mantine/core';
-import { IconActivity, IconAward, IconNumbers } from '@tabler/icons-react';
+import { IconActivity, IconAward, IconChartArrowsVertical, IconNumbers } from '@tabler/icons-react';
 import cx from 'classnames';
-import PlayerCard from '~/components/PlayerCard/PlayerCard';
 import TopPlayerCard from '~/components/PlayerCard/TopPlayerCard';
 import PlayerList from '~/components/PlayerList/PlayerList';
 import { type PlayerInfo } from '~/types/Player';
 import { type PlayerListSortBy } from '~/utils/sortData';
+import PlayerCard from '../PlayerCard/PlayerCard';
 import styles from './leaderboard.module.scss';
 
 export interface LeaderboardProps {
@@ -65,6 +65,7 @@ function SortMenu({
           <Menu.Item onClick={() => handleTabChange('rank')}>Rank</Menu.Item>
           <Menu.Item onClick={() => handleTabChange('experience')}>Level</Menu.Item>
           <Menu.Item onClick={() => handleTabChange('wins')}>Wins</Menu.Item>
+          <Menu.Item onClick={() => handleTabChange('peak')}>Peak Rating</Menu.Item>
         </Menu.Dropdown>
       </Menu>
     </div>
@@ -113,6 +114,13 @@ function SortTabs({
             className={cx(styles.tab)}
           >
             Wins
+          </Tabs.Tab>
+          <Tabs.Tab
+            value="peak"
+            leftSection={<IconChartArrowsVertical style={iconStyle} />}
+            className={cx(styles.tab)}
+          >
+            Peak Rating
           </Tabs.Tab>
         </Tabs.List>
       </Tabs>
