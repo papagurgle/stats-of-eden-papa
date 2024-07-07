@@ -103,17 +103,10 @@ export const playerRouter = createTRPCRouter({
       const items = (await ctx.db.player.findMany({
         skip: skip,
         take: limit + 1,
-        where:
-          sort === 'rank' || sort === 'peak'
-            ? {
-                rank: {
-                  not: null,
-                },
-                rankedPeakRating: {
-                  not: null,
-                },
-              }
-            : undefined,
+        where: {
+          rank: sort === 'rank' ? { not: null } : undefined,
+          rankedPeakRating: sort === 'peak' ? { not: null } : undefined,
+        },
         cursor: cursor
           ? {
               playFabId: cursor,
