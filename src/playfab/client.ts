@@ -1,3 +1,4 @@
+import retry from 'async-retry';
 import { PlayFabClient } from 'playfab-sdk';
 import util from 'util';
 import {
@@ -77,9 +78,31 @@ export async function fetchLeaderboardAroundPlayer(
 
 export async function fetchUserData(settings: PlayFabClientModels.GetUserDataRequest) {
   try {
-    const response = await util.promisify(PlayFabClient.GetUserData.bind(PlayFabClient))(settings);
+    const response = await retry(
+      async (bail) => {
+        const response = await util.promisify(PlayFabClient.GetUserData.bind(PlayFabClient))(
+          settings
+        );
 
-    return GetUserDataResponseSchema.parse(response).data;
+        if (response.error && response.code !== 500) {
+          console.log('GetUserData received error', response);
+          bail(new Error(response.errorMessage));
+          return;
+        }
+
+        return GetUserDataResponseSchema.parse(response).data;
+      },
+      {
+        onRetry: (error, attempt) =>
+          console.log(`Retrying GetUserData. Attempt: ${attempt}:`, error, settings),
+      }
+    );
+
+    if (!response) {
+      throw new Error('GetUserDataRequest response was undefined');
+    }
+
+    return response;
   } catch (error) {
     console.error('Error fetching user data:', error);
     throw error;

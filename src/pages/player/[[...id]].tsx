@@ -17,7 +17,7 @@ export default function PlayerPage({
   siteState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const id = router.query.id as string;
+  const id = router.query.id?.[0];
 
   if (!player) {
     return <Alert title="Player not found">Player with ID {id} not found</Alert>;
@@ -42,10 +42,10 @@ export default function PlayerPage({
 }
 
 export const getServerSideProps = (async (context) => {
-  const id = context.params?.id?.[0] as unknown as string;
+  const id = context.params?.id?.[0];
   const player = await db.player.findUnique({
     where: {
-      playFabId: id,
+      playFabId: id ?? '',
     },
     include: {
       snapshots: {
