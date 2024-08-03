@@ -107,3 +107,14 @@ export const GetUserDataResponseSchema = z.object({
     DataVersion: z.number(),
   }),
 });
+
+export const GetUserDataResponseErrorSchema = z.object({
+  code: z.number(),
+  status: z.string(),
+  retryAfterSeconds: z.null(),
+  error: z.string(),
+  errorCode: z.number(),
+  errorMessage: z.string(),
+  errorHash: z.string(),
+  errorDetails: z.object({ RequestID: z.array(z.string()) }),
+});
