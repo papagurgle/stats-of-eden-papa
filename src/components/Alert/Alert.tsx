@@ -3,12 +3,11 @@ import { IconInfoCircle } from '@tabler/icons-react';
 
 type AlertProps = {
   title: string;
-  children: React.ReactNode;
-};
+} & React.ComponentProps<typeof MantineAlert>;
 
-export default function Alert({ title, children }: AlertProps) {
+export default function Alert({ title, children, ...props }: AlertProps) {
   return (
-    <MantineAlert variant="light" color="pink" title={title} icon={<IconInfoCircle />}>
+    <MantineAlert variant="light" color="pink" title={title} icon={<IconInfoCircle />} {...props}>
       {children}
     </MantineAlert>
   );

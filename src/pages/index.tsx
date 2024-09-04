@@ -45,6 +45,9 @@ export default function IndexPage(props: InferGetServerSidePropsType<typeof getS
 
   return (
     <>
+      <Alert title="Welcome!" color={undefined} mb="xs">
+        Website updates for season 2 and the new characters is coming soon! Stay tuned!
+      </Alert>
       <Box pos="relative">
         <LoadingOverlay
           visible={playersQuery.isFetching || playersQuery.isFetchingNextPage}
