@@ -11,6 +11,7 @@ import getUrl from '~/utils/getUrl';
 
 export async function updateDB() {
   try {
+    console.log("Updating Database");
     console.time('updateDB');
 
     await fetch(getUrl('/api/updated'), {
